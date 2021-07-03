@@ -1,8 +1,8 @@
 extends TextureRect
 
-export var need = 1
-export var greed = 1
-export var balance = 5
+export var needs = []
+export var greeds = []
+export var balances = []
 #export var volatility = 1
 export var type = "None"
 
@@ -16,45 +16,60 @@ func _ready():
 	rng.randomize()
 
 func init(set_need, set_greed, set_type):
-	need = set_need
-	greed = set_greed
+	needs = set_need.duplicate()
+	greeds = set_greed.duplicate()
 	#volatility = set_vol
-	balance = 0
+	balances = set_need.duplicate()#not sure why I can't just loop by size and append
+	for i in range(0,balances.size()):
+		balances[i] = 0
 	type = set_type
-	hint_tooltip = "Type: " + type + ", Need: " + str(need) + ", Greed: " + str(greed) + ", Current: " + str(balance)
+	hint_tooltip = "Type: " + type + ", Need: " + str(needs) + ", Greed: " + str(greeds) + ", Current: " + str(balances)
 	set_status(STATUS.ALIVE)
 
 func work(volatility = 0):
-	if status != STATUS.DEAD:
-		self.balance = self.balance + self.greed + rng.randi_range(-volatility, volatility)
-		survive()
+	for i in needs.size():
+		if status != STATUS.DEAD:
+			self.balances[i] = self.balances[i] + self.greeds[i] + rng.randi_range(-volatility, volatility)
+	survive()
 
-func tax(volatility = 0, partial = 0):
-	if status != STATUS.DEAD:
-		self.balance = self.balance + self.greed
-	if partial != 0:
-		if balance > partial:
-			var temp = partial
-			balance = balance - partial
-			return temp
+func tax(index, volatility = 0, partial = 0):
+	for i in range(0,needs.size()-1):
+		if status != STATUS.DEAD:
+			self.balances[i] = self.balances[i] + self.greeds[i]
+			if partial != 0:
+				if balances[i] > partial:
+					var temp = partial
+					balances[i] = balances[i] - partial
+					return temp
+				else:
+					var temp = balances[i]
+					balances[i] = 0
+					return temp
+			else:
+				var temp = balances[i]
+				balances[i] = 0
+				return temp
 		else:
-			var temp = balance
-			balance = 0
+			var temp = balances[i]
+			balances[i] = 0
 			return temp
-	else:
-		var temp = balance
-		balance = 0
-		return temp
 
-func stim(partial):
-	balance = balance + partial
+func stim(partial,i):
+	balances[i] = balances[i] + partial
+
+func buy():
+	pass
+
+func sell():
+	pass
 
 func survive():
-	balance = balance - need
-	hint_tooltip = "Type: " + type + ", Need: " + str(need) + ", Greed: " + str(greed) + ", Current: " + str(balance)
-	if balance < 0:
-		balance = 0
-		self.set_status(STATUS.DEAD)
+	for i in range(0,needs.size()-1):
+		balances[i] = balances[i] - needs[i]
+		hint_tooltip = "Type: " + type + ", Need: " + str(needs) + ", Greed: " + str(greeds) + ", Current: " + str(balances)
+		if balances[i] < 0 and self.status != STATUS.DEAD:
+			balances[i] = 0
+			self.set_status(STATUS.DEAD)
 
 func set_status(new_status):
 	status = new_status

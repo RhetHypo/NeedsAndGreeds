@@ -11,7 +11,10 @@ export var realism = true#need is increased to be a percentage of greed, a.k.a. 
 export var realism_amplifier = .75
 export var need_amplifier = 5
 export var greed_amplifier = 5
-export var bank = 0
+export var bank = []
+export var prices = []
+export var gdp = []
+export var diversity = 2
 
 var rng = RandomNumberGenerator.new()
 
@@ -37,6 +40,7 @@ func _ready():
 	variables.get_node("DeviEdit").value = deviation
 	variables.get_node("PoorEdit").value = poor
 	variables.get_node("RichEdit").value = rich
+	variables.get_node("DiveEdit").value = diversity
 	variables.get_node("SlowEdit").pressed = slow
 	variables.get_node("RealismEdit").pressed = realism
 	
@@ -49,23 +53,27 @@ func initialize():
 	var curRich = rich
 	for i in range(population):
 		var curType = "None"
-		var newNeed = int(deviation/2) #* int(need_amplifier)
-		var newGreed = rng.randi_range(0, deviation)
+		var newNeeds = []
+		var newGreeds = []
 		if(curPoor > 0):
-			newGreed = int(newGreed/greed_amplifier)
-			curPoor -= 1
 			curType = "Poor"
+			curPoor -= 1
 		elif(curRich > 0):
-			newGreed = int((newGreed+1)*greed_amplifier)
-			curRich -= 1
 			curType = "Rich"
-		else:
-			newGreed = newGreed
-		print(int(newGreed * realism_amplifier))
-		if(realism):
-			if(newNeed < int(newGreed * realism_amplifier)):
-				newNeed = int(newGreed * realism_amplifier)
-		instance_eed(newNeed,newGreed,volatility,curType)
+			curRich -= 1
+		for j in range(0,diversity):
+			newNeeds.append(int(deviation/2)) #* int(need_amplifier)
+			newGreeds.append(rng.randi_range(0, deviation))
+			if(curType == "Poor"):
+				newGreeds[j] = int(newGreeds[j]/greed_amplifier)
+			elif(curType == "Rich"):
+				newGreeds[j] = int((newGreeds[j]+1)*greed_amplifier)
+			if(realism):
+				if(newNeeds[j] < int(newGreeds[j] * realism_amplifier)):
+					newNeeds[j] = int(newGreeds[j] * realism_amplifier)
+		instance_eed(newNeeds,newGreeds,curType)
+	for j in range(0,diversity):
+		bank.append(0)
 	initial_state = grid.get_children().duplicate()
 
 func run_standard_simulation():
@@ -92,15 +100,18 @@ func run_pooled_simulation():
 			break
 		else:
 			yield(self,"next_turn")
-		for child in grid.get_children():
-			var tax = child.tax(volatility)
-			bank = bank + tax
-		results(i + 1)
-		for child in grid.get_children():
-			if bank > child.need and child.status == STATUS.ALIVE:
-				child.stim(child.need)
-				bank = bank - child.need
-		results(i + 1)
+		for j in range(0,diversity):
+			for child in grid.get_children():
+				if child.status == STATUS.ALIVE:
+					var tax = child.tax(j,volatility)
+					bank[j] = bank[j] + tax
+			results(i + 1)
+		for j in range(0,diversity):
+			for child in grid.get_children():
+				if bank[j] > child.needs[j] and child.status == STATUS.ALIVE:
+					child.stim(child.needs[j], j)
+					bank[j] = bank[j] - child.needs[j]
+			results(i + 1)
 		for child in grid.get_children():
 			child.survive()
 			if slow:
@@ -113,17 +124,30 @@ func run_pooled_simulation():
 func results(i):
 	var alive = []
 	var dead = []
+	var need = []
+	gdp = []
+	for i in range(0,diversity):
+		gdp.append(0)
+		need.append(0)
 	for child in grid.get_children():
+		for i in child.needs.size():
+			need[i] += child.needs[i]
+		for i in child.greeds.size():
+			gdp[i] += child.greeds[i]
 		if child.status == STATUS.DEAD:
 			dead.append(child)
 		elif child.status == STATUS.ALIVE:
 			alive.append(child)
+	prices()
 	results.text = "Turn: " + str(i)
 	results.text = results.text + "\n" + "ALIVE: " + str(alive.size())
 	results.text = results.text + "\n" + "DEAD: " + str(dead.size())
 	results.text = results.text + "\n" + "BANK: " + str(bank)
+	results.text = results.text + "\n" + "PRICES: " + str(prices)
+	results.text = results.text + "\n" + "TOTAL NEEDS:  " + str(need)
+	results.text = results.text + "\n" + "TOTAL GREEDS: " + str(gdp)
 	
-func instance_eed(need, greed, vol, type):
+func instance_eed(need, greed, type):
 	var newEed = EED.instance()
 	newEed.init(need,greed,type)
 	grid.add_child(newEed)
@@ -133,8 +157,10 @@ func reset():
 	yield(self,"next_turn")
 	var current_children = grid.get_children()
 	for child in initial_state:
-		current_children[child.get_index()].init(child.need,child.greed,child.type)
-	bank = 0
+		current_children[child.get_index()].init(child.needs,child.greeds,child.type)
+	bank = []
+	for j in range(0,diversity):
+		bank.append(0)
 	results(0)
 
 func _on_Reset_pressed():
@@ -197,3 +223,7 @@ func _on_RealismEdit_toggled(button_pressed):
 
 func _on_VolEdit_value_changed(value):
 	volatility = value
+
+
+func _on_DiveEdit_value_changed(value):
+	diversity = value

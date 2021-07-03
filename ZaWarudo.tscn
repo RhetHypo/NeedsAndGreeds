@@ -1,0 +1,211 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://ZaWarudo.gd" type="Script" id=1]
+
+[node name="ZaWarudo" type="CenterContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 302.0
+margin_top = 198.0
+margin_right = 722.0
+margin_bottom = 402.0
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+margin_right = 420.0
+margin_bottom = 20.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer"]
+margin_right = 420.0
+margin_bottom = 20.0
+
+[node name="Reset" type="Button" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+margin_right = 48.0
+margin_bottom = 20.0
+text = "Reset"
+
+[node name="Standard" type="Button" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+margin_left = 52.0
+margin_right = 147.0
+margin_bottom = 20.0
+text = "Run Standard"
+
+[node name="Pooled" type="Button" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+margin_left = 151.0
+margin_right = 235.0
+margin_bottom = 20.0
+text = "Run Pooled"
+
+[node name="Reset Stats" type="Button" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+margin_left = 239.0
+margin_right = 322.0
+margin_bottom = 20.0
+text = "Reset Stats"
+
+[node name="Pause" type="Button" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+pause_mode = 2
+margin_left = 326.0
+margin_right = 376.0
+margin_bottom = 20.0
+text = "Pause"
+
+[node name="Stop" type="Button" parent="VBoxContainer/MarginContainer/HBoxContainer"]
+margin_left = 380.0
+margin_right = 420.0
+margin_bottom = 20.0
+text = "Stop"
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
+margin_top = 24.0
+margin_right = 420.0
+margin_bottom = 24.0
+
+[node name="CenterContainer" type="CenterContainer" parent="VBoxContainer"]
+margin_top = 28.0
+margin_right = 420.0
+margin_bottom = 76.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Label" type="Label" parent="VBoxContainer/CenterContainer"]
+margin_left = 184.0
+margin_right = 235.0
+margin_bottom = 48.0
+size_flags_horizontal = 2
+size_flags_vertical = 2
+text = "Results:
+Alive:
+Dead:"
+
+[node name="Variables" type="GridContainer" parent="VBoxContainer"]
+margin_top = 80.0
+margin_right = 420.0
+margin_bottom = 204.0
+columns = 4
+
+[node name="PopLabel" type="Label" parent="VBoxContainer/Variables"]
+margin_top = 5.0
+margin_right = 69.0
+margin_bottom = 19.0
+text = "Population"
+align = 2
+
+[node name="PopEdit" type="SpinBox" parent="VBoxContainer/Variables"]
+margin_left = 73.0
+margin_right = 149.0
+margin_bottom = 24.0
+
+[node name="TurnsLabel" type="Label" parent="VBoxContainer/Variables"]
+margin_left = 153.0
+margin_top = 5.0
+margin_right = 214.0
+margin_bottom = 19.0
+text = "Turns"
+align = 2
+
+[node name="TurnsEdit" type="SpinBox" parent="VBoxContainer/Variables"]
+margin_left = 218.0
+margin_right = 294.0
+margin_bottom = 24.0
+
+[node name="VolLabel" type="Label" parent="VBoxContainer/Variables"]
+margin_top = 33.0
+margin_right = 69.0
+margin_bottom = 47.0
+text = "Volatility"
+align = 2
+
+[node name="VolEdit" type="SpinBox" parent="VBoxContainer/Variables"]
+margin_left = 73.0
+margin_top = 28.0
+margin_right = 149.0
+margin_bottom = 52.0
+
+[node name="DeviLabel" type="Label" parent="VBoxContainer/Variables"]
+margin_left = 153.0
+margin_top = 33.0
+margin_right = 214.0
+margin_bottom = 47.0
+text = "Deviation"
+align = 2
+
+[node name="DeviEdit" type="SpinBox" parent="VBoxContainer/Variables"]
+margin_left = 218.0
+margin_top = 28.0
+margin_right = 294.0
+margin_bottom = 52.0
+
+[node name="PoorLabel" type="Label" parent="VBoxContainer/Variables"]
+margin_top = 61.0
+margin_right = 69.0
+margin_bottom = 75.0
+text = "Poverty"
+align = 2
+
+[node name="PoorEdit" type="SpinBox" parent="VBoxContainer/Variables"]
+margin_left = 73.0
+margin_top = 56.0
+margin_right = 149.0
+margin_bottom = 80.0
+
+[node name="RichLabel" type="Label" parent="VBoxContainer/Variables"]
+margin_left = 153.0
+margin_top = 61.0
+margin_right = 214.0
+margin_bottom = 75.0
+text = "Wealthy"
+align = 2
+
+[node name="RichEdit" type="SpinBox" parent="VBoxContainer/Variables"]
+margin_left = 218.0
+margin_top = 56.0
+margin_right = 294.0
+margin_bottom = 80.0
+
+[node name="SlowLabel" type="Label" parent="VBoxContainer/Variables"]
+margin_top = 97.0
+margin_right = 69.0
+margin_bottom = 111.0
+text = "Slow Mode"
+align = 2
+
+[node name="SlowEdit" type="CheckButton" parent="VBoxContainer/Variables"]
+margin_left = 73.0
+margin_top = 84.0
+margin_right = 149.0
+margin_bottom = 124.0
+
+[node name="RealismLabel" type="Label" parent="VBoxContainer/Variables"]
+margin_left = 153.0
+margin_top = 97.0
+margin_right = 214.0
+margin_bottom = 111.0
+text = "Realism"
+align = 2
+
+[node name="RealismEdit" type="CheckButton" parent="VBoxContainer/Variables"]
+margin_left = 218.0
+margin_top = 84.0
+margin_right = 294.0
+margin_bottom = 124.0
+
+[node name="TurnTimer" type="Timer" parent="."]
+wait_time = 0.05
+autostart = true
+[connection signal="pressed" from="VBoxContainer/MarginContainer/HBoxContainer/Reset" to="." method="_on_Reset_pressed"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/HBoxContainer/Standard" to="." method="_on_Standard_pressed"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/HBoxContainer/Pooled" to="." method="_on_Pooled_pressed"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/HBoxContainer/Reset Stats" to="." method="_on_Reset_Stats_pressed"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/HBoxContainer/Pause" to="." method="_on_Pause_pressed"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/HBoxContainer/Stop" to="." method="_on_Stop_pressed"]
+[connection signal="value_changed" from="VBoxContainer/Variables/PopEdit" to="." method="_on_PopEdit_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/Variables/TurnsEdit" to="." method="_on_TurnsEdit_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/Variables/VolEdit" to="." method="_on_VolEdit_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/Variables/DeviEdit" to="." method="_on_DeviEdit_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/Variables/PoorEdit" to="." method="_on_PoorEdit_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/Variables/RichEdit" to="." method="_on_RichEdit_value_changed"]
+[connection signal="toggled" from="VBoxContainer/Variables/SlowEdit" to="." method="_on_CheckBox_toggled"]
+[connection signal="toggled" from="VBoxContainer/Variables/RealismEdit" to="." method="_on_RealismEdit_toggled"]
+[connection signal="timeout" from="TurnTimer" to="." method="_on_TurnTimer_timeout"]

@@ -1,4 +1,4 @@
-extends CenterContainer
+extends GridContainer
 
 export var population = 25
 export var turns = 5
@@ -9,7 +9,7 @@ export var rich = 0
 export var spec = 10
 export var slow = false
 export var realism = false#need is increased to be a percentage of greed, a.k.a. you need to spend money to make money
-export var realism_amplifier = .75
+export var realism_amplifier = .90
 export var need_amplifier = 5
 export var greed_amplifier = 5
 export var spec_amplifier = 2
@@ -24,7 +24,7 @@ enum STATUS {ALIVE, DEAD}
 
 const EED = preload("res://Eed.tscn")
 
-onready var grid = get_node("VBoxContainer/GridContainer")
+onready var grid = get_node("InnerWarudo/GridContainer")
 onready var results = get_node("VBoxContainer/CenterContainer/Label")
 onready var variables = get_node("VBoxContainer/Variables")
 
@@ -82,13 +82,18 @@ func initialize():
 				if j == rand_spec:
 					newGreeds[j] = int((newGreeds[j]+1)*greed_amplifier*spec_amplifier)
 			#TODO: This no longer makes sense, need to overhaul
-#			if(realism):
-#				if(newNeeds[j] < int(newGreeds[j] * realism_amplifier)):
-#					newNeeds[j] = int(newGreeds[j] * realism_amplifier)
+		if(realism):
+			var totalGreed = 0
+			for k in range(0,diversity):
+				totalGreed += newGreeds[k]
+			for l in range(0,diversity):
+				if(newNeeds[l] < int(int(totalGreed * realism_amplifier)/diversity)):
+					newNeeds[l] = int(int(totalGreed * realism_amplifier)/diversity)
 		instance_eed(newNeeds,newGreeds,curType)
 	for j in range(0,diversity):
 		bank.append(0)
 	initial_state = grid.get_children().duplicate()
+	formatEedGrid()
 
 func run_standard_simulation():
 	stopped = false
@@ -195,6 +200,13 @@ func prices():
 		else:
 			prices.append(float(float(gross)/float(good)/gdp.size()))
 
+func formatEedGrid():
+	if grid.get_child_count() > 0:
+		var eed_width = grid.get_child(0).rect_size.x
+		var grid_width = grid.get_parent().rect_size.x
+		grid.columns = grid_width/eed_width
+		print(grid.columns)
+
 func _on_Reset_pressed():
 	reset()
 
@@ -261,3 +273,7 @@ func _on_VolEdit_value_changed(value):
 
 func _on_DiveEdit_value_changed(value):
 	diversity = value
+
+func _on_InnerWarudo_resized():
+	formatEedGrid()
+	print("Test123")

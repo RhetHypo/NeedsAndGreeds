@@ -17,7 +17,7 @@ _global_script_class_icons={
 
 config/name="NeedsAndGreeds"
 run/main_scene="res://ZaWarudo.tscn"
-config/icon="res://icon.png"
+config/icon="res://NPC_wojak_meme.png"
 
 [rendering]
 

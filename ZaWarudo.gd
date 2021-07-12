@@ -1,22 +1,22 @@
 extends GridContainer
 
-export var population = 25
+export var population = 30
 export var turns = 5
-export var volatility = 0
-export var deviation = 4
-export var poor = 0
-export var rich = 0
+export var volatility = 10
+export var deviation = 10
+export var poor = 10
+export var rich = 10
 export var spec = 10
 export var slow = false
-export var realism = false#need is increased to be a percentage of greed, a.k.a. you need to spend money to make money
+export var realism = true#need is increased to be a percentage of greed, a.k.a. you need to spend money to make money
 export var realism_amplifier = .90
 export var need_amplifier = 5
 export var greed_amplifier = 5
-export var spec_amplifier = 2
+export var spec_amplifier = 5
 export var bank = []
 export var prices = []
 export var gdp = []
-export var diversity = 2
+export var diversity = 3
 
 var rng = RandomNumberGenerator.new()
 
@@ -28,6 +28,7 @@ const RESULT = preload("res://Result.tscn")
 onready var grid = get_node("InnerWarudo/GridContainer")
 onready var results = get_node("VBoxContainer/CenterContainer/VBoxContainer/Results")
 onready var variables = get_node("VBoxContainer/Variables")
+onready var amplifiers = get_node("Amplifiers")
 onready var survivors = get_node("VBoxContainer/CenterContainer/VBoxContainer/Survivors")
 onready var standardPastResults = get_node("VBoxContainer/CenterContainer/VBoxContainer/PastResults/Standard")
 onready var pooledPastResults = get_node("VBoxContainer/CenterContainer/VBoxContainer/PastResults/Pooled")
@@ -50,6 +51,9 @@ func _ready():
 	variables.get_node("DiveEdit").value = diversity
 	variables.get_node("SlowEdit").pressed = slow
 	variables.get_node("RealismEdit").pressed = realism
+	amplifiers.get_node("GreedAmpEdit").value = greed_amplifier
+	amplifiers.get_node("NeedAmpEdit").value = need_amplifier
+	amplifiers.get_node("")
 	
 func initialize():
 	for child in grid.get_children():

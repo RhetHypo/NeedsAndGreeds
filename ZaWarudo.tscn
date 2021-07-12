@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://ZaWarudo.gd" type="Script" id=1]
+[ext_resource path="res://ZaWarudo.tres" type="ButtonGroup" id=2]
 
 [node name="ZaWarudo" type="GridContainer"]
 anchor_right = 1.0
@@ -13,21 +14,23 @@ wait_time = 0.05
 autostart = true
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-margin_right = 726.0
-margin_bottom = 20.0
+editor/display_folded = true
+margin_right = 649.0
+margin_bottom = 24.0
 size_flags_horizontal = 3
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="CenterContainer" type="CenterContainer" parent="MarginContainer"]
-margin_right = 726.0
-margin_bottom = 20.0
+margin_right = 649.0
+margin_bottom = 24.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/CenterContainer"]
-margin_left = 153.0
-margin_right = 573.0
-margin_bottom = 20.0
+margin_left = 114.0
+margin_top = 2.0
+margin_right = 534.0
+margin_bottom = 22.0
 
 [node name="Reset" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
 margin_right = 48.0
@@ -65,181 +68,265 @@ margin_right = 420.0
 margin_bottom = 20.0
 text = "Stop"
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
-margin_left = 730.0
+[node name="Amplifiers" type="HBoxContainer" parent="."]
+margin_left = 653.0
 margin_right = 1024.0
-margin_bottom = 20.0
+margin_bottom = 24.0
+
+[node name="NeedAmpLabel" type="Label" parent="Amplifiers"]
+margin_top = 5.0
+margin_right = 44.0
+margin_bottom = 19.0
+text = "N Amp"
+
+[node name="NeedAmpEdit" type="SpinBox" parent="Amplifiers"]
+margin_left = 48.0
+margin_right = 122.0
+margin_bottom = 24.0
+
+[node name="GreedAmpLabel" type="Label" parent="Amplifiers"]
+margin_left = 126.0
+margin_top = 5.0
+margin_right = 170.0
+margin_bottom = 19.0
+text = "G Amp"
+
+[node name="GreedAmpEdit" type="SpinBox" parent="Amplifiers"]
+margin_left = 174.0
+margin_right = 248.0
+margin_bottom = 24.0
+
+[node name="SpecAmpLabel" type="Label" parent="Amplifiers"]
+margin_left = 252.0
+margin_top = 5.0
+margin_right = 293.0
+margin_bottom = 19.0
+text = "S Amp"
+
+[node name="SpecAmpEdit" type="SpinBox" parent="Amplifiers"]
+margin_left = 297.0
+margin_right = 371.0
+margin_bottom = 24.0
 
 [node name="InnerWarudo" type="ScrollContainer" parent="."]
-margin_top = 24.0
-margin_right = 726.0
+margin_top = 28.0
+margin_right = 649.0
 margin_bottom = 600.0
 size_flags_vertical = 3
 
 [node name="GridContainer" type="GridContainer" parent="InnerWarudo"]
-margin_right = 726.0
-margin_bottom = 576.0
+margin_right = 649.0
+margin_bottom = 572.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-margin_left = 730.0
-margin_top = 24.0
+margin_left = 653.0
+margin_top = 28.0
 margin_right = 1024.0
 margin_bottom = 600.0
 
 [node name="Variables" type="GridContainer" parent="VBoxContainer"]
-editor/display_folded = true
-margin_right = 294.0
-margin_bottom = 152.0
+margin_right = 371.0
+margin_bottom = 208.0
 columns = 4
 
 [node name="PopLabel" type="Label" parent="VBoxContainer/Variables"]
 margin_top = 5.0
-margin_right = 69.0
+margin_right = 75.0
 margin_bottom = 19.0
 text = "Population"
 align = 2
 
 [node name="PopEdit" type="SpinBox" parent="VBoxContainer/Variables"]
-margin_left = 73.0
-margin_right = 149.0
+margin_left = 79.0
+margin_right = 155.0
 margin_bottom = 24.0
 max_value = 10000.0
 
 [node name="TurnsLabel" type="Label" parent="VBoxContainer/Variables"]
-margin_left = 153.0
+margin_left = 159.0
 margin_top = 5.0
-margin_right = 214.0
+margin_right = 260.0
 margin_bottom = 19.0
 text = "Turns"
 align = 2
 
 [node name="TurnsEdit" type="SpinBox" parent="VBoxContainer/Variables"]
-margin_left = 218.0
-margin_right = 294.0
+margin_left = 264.0
+margin_right = 340.0
 margin_bottom = 24.0
 
 [node name="VolLabel" type="Label" parent="VBoxContainer/Variables"]
 margin_top = 33.0
-margin_right = 69.0
+margin_right = 75.0
 margin_bottom = 47.0
 text = "Volatility"
 align = 2
 
 [node name="VolEdit" type="SpinBox" parent="VBoxContainer/Variables"]
-margin_left = 73.0
+margin_left = 79.0
 margin_top = 28.0
-margin_right = 149.0
+margin_right = 155.0
 margin_bottom = 52.0
 
 [node name="DeviLabel" type="Label" parent="VBoxContainer/Variables"]
-margin_left = 153.0
+margin_left = 159.0
 margin_top = 33.0
-margin_right = 214.0
+margin_right = 260.0
 margin_bottom = 47.0
 text = "Deviation"
 align = 2
 
 [node name="DeviEdit" type="SpinBox" parent="VBoxContainer/Variables"]
-margin_left = 218.0
+margin_left = 264.0
 margin_top = 28.0
-margin_right = 294.0
+margin_right = 340.0
 margin_bottom = 52.0
 
 [node name="PoorLabel" type="Label" parent="VBoxContainer/Variables"]
 margin_top = 61.0
-margin_right = 69.0
+margin_right = 75.0
 margin_bottom = 75.0
 text = "Poverty"
 align = 2
 
 [node name="PoorEdit" type="SpinBox" parent="VBoxContainer/Variables"]
-margin_left = 73.0
+margin_left = 79.0
 margin_top = 56.0
-margin_right = 149.0
+margin_right = 155.0
 margin_bottom = 80.0
 
 [node name="RichLabel" type="Label" parent="VBoxContainer/Variables"]
-margin_left = 153.0
+margin_left = 159.0
 margin_top = 61.0
-margin_right = 214.0
+margin_right = 260.0
 margin_bottom = 75.0
 text = "Wealthy"
 align = 2
 
 [node name="RichEdit" type="SpinBox" parent="VBoxContainer/Variables"]
-margin_left = 218.0
+margin_left = 264.0
 margin_top = 56.0
-margin_right = 294.0
+margin_right = 340.0
 margin_bottom = 80.0
 
 [node name="SpecLabel" type="Label" parent="VBoxContainer/Variables"]
 margin_top = 89.0
-margin_right = 69.0
+margin_right = 75.0
 margin_bottom = 103.0
 text = "Specialists"
 align = 2
 
 [node name="SpecEdit" type="SpinBox" parent="VBoxContainer/Variables"]
-margin_left = 73.0
+margin_left = 79.0
 margin_top = 84.0
-margin_right = 149.0
+margin_right = 155.0
 margin_bottom = 108.0
 
 [node name="DiveLabel" type="Label" parent="VBoxContainer/Variables"]
-margin_left = 153.0
+margin_left = 159.0
 margin_top = 89.0
-margin_right = 214.0
+margin_right = 260.0
 margin_bottom = 103.0
 text = "Diversity"
 align = 2
 
 [node name="DiveEdit" type="SpinBox" parent="VBoxContainer/Variables"]
-margin_left = 218.0
+margin_left = 264.0
 margin_top = 84.0
-margin_right = 294.0
+margin_right = 340.0
 margin_bottom = 108.0
 
+[node name="CrashLabel" type="Label" parent="VBoxContainer/Variables"]
+margin_top = 117.0
+margin_right = 75.0
+margin_bottom = 131.0
+text = "Crash Freq"
+
+[node name="CrashEdit" type="SpinBox" parent="VBoxContainer/Variables"]
+margin_left = 79.0
+margin_top = 112.0
+margin_right = 155.0
+margin_bottom = 136.0
+
+[node name="SpacerLabel" type="Label" parent="VBoxContainer/Variables"]
+margin_left = 159.0
+margin_top = 117.0
+margin_right = 260.0
+margin_bottom = 131.0
+
+[node name="SpacerLabel2" type="Label" parent="VBoxContainer/Variables"]
+margin_left = 264.0
+margin_top = 117.0
+margin_right = 340.0
+margin_bottom = 131.0
+
 [node name="SlowLabel" type="Label" parent="VBoxContainer/Variables"]
-margin_top = 125.0
-margin_right = 69.0
-margin_bottom = 139.0
+margin_top = 153.0
+margin_right = 75.0
+margin_bottom = 167.0
 text = "Slow Mode"
 align = 2
 
 [node name="SlowEdit" type="CheckButton" parent="VBoxContainer/Variables"]
-margin_left = 73.0
-margin_top = 112.0
-margin_right = 149.0
-margin_bottom = 152.0
+margin_left = 79.0
+margin_top = 140.0
+margin_right = 155.0
+margin_bottom = 180.0
 
 [node name="RealismLabel" type="Label" parent="VBoxContainer/Variables"]
-margin_left = 153.0
-margin_top = 125.0
-margin_right = 214.0
-margin_bottom = 139.0
+margin_left = 159.0
+margin_top = 153.0
+margin_right = 260.0
+margin_bottom = 167.0
 text = "Realism"
 align = 2
 
 [node name="RealismEdit" type="CheckButton" parent="VBoxContainer/Variables"]
-margin_left = 218.0
-margin_top = 112.0
-margin_right = 294.0
-margin_bottom = 152.0
+margin_left = 264.0
+margin_top = 140.0
+margin_right = 340.0
+margin_bottom = 180.0
+
+[node name="NormalButton" type="CheckBox" parent="VBoxContainer/Variables"]
+margin_top = 184.0
+margin_right = 75.0
+margin_bottom = 208.0
+group = ExtResource( 2 )
+text = "Normal"
+
+[node name="UtopiaButton" type="CheckBox" parent="VBoxContainer/Variables"]
+margin_left = 79.0
+margin_top = 184.0
+margin_right = 155.0
+margin_bottom = 208.0
+hint_tooltip = "Just removes needs entirely"
+group = ExtResource( 2 )
+text = "Utopia"
+
+[node name="ApocButton" type="CheckBox" parent="VBoxContainer/Variables"]
+margin_left = 159.0
+margin_top = 184.0
+margin_right = 260.0
+margin_bottom = 208.0
+hint_tooltip = "Sets greed to zero and runs until everyone is dead, recording the turns"
+group = ExtResource( 2 )
+text = "Apocalypse"
 
 [node name="CenterContainer" type="CenterContainer" parent="VBoxContainer"]
-margin_top = 156.0
-margin_right = 294.0
-margin_bottom = 576.0
+editor/display_folded = true
+margin_top = 212.0
+margin_right = 371.0
+margin_bottom = 572.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/CenterContainer"]
-margin_left = 47.0
-margin_top = 141.0
-margin_right = 247.0
-margin_bottom = 279.0
+margin_left = 85.0
+margin_top = 111.0
+margin_right = 285.0
+margin_bottom = 249.0
 rect_min_size = Vector2( 200, 0 )
 
 [node name="Results" type="Label" parent="VBoxContainer/CenterContainer/VBoxContainer"]

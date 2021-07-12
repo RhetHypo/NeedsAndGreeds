@@ -23,10 +23,14 @@ var rng = RandomNumberGenerator.new()
 enum STATUS {ALIVE, DEAD}
 
 const EED = preload("res://Eed.tscn")
+const RESULT = preload("res://Result.tscn")
 
 onready var grid = get_node("InnerWarudo/GridContainer")
-onready var results = get_node("VBoxContainer/CenterContainer/Label")
+onready var results = get_node("VBoxContainer/CenterContainer/VBoxContainer/Results")
 onready var variables = get_node("VBoxContainer/Variables")
+onready var survivors = get_node("VBoxContainer/CenterContainer/VBoxContainer/Survivors")
+onready var standardPastResults = get_node("VBoxContainer/CenterContainer/VBoxContainer/PastResults/Standard")
+onready var pooledPastResults = get_node("VBoxContainer/CenterContainer/VBoxContainer/PastResults/Pooled")
 
 signal next_turn
 
@@ -50,6 +54,10 @@ func _ready():
 func initialize():
 	for child in grid.get_children():
 		grid.remove_child(child)
+	for child in standardPastResults.get_children():
+		standardPastResults.remove_child(child)
+	for child in pooledPastResults.get_children():
+		pooledPastResults.remove_child(child)
 	rng.randomize()
 	grid.columns = 10#sqrt(population)
 	var curPoor = poor
@@ -96,6 +104,7 @@ func initialize():
 	formatEedGrid()
 
 func run_standard_simulation():
+	reset()
 	stopped = false
 	for i in range(turns):
 		if stopped:
@@ -118,8 +127,10 @@ func run_standard_simulation():
 				bank[j] -= child.buy(j,prices[j],bank[j])
 			child.survive()
 		results(i + 1)
+	results(turns,1)
 
 func run_pooled_simulation():
+	reset()
 	stopped = false
 	for i in range(turns):
 		if stopped:
@@ -146,8 +157,9 @@ func run_pooled_simulation():
 				child.select(false)
 			results(i + 1)
 		results(i + 1)
+	results(turns,2)
 
-func results(i):
+func results(i, final=0):
 	var alive = []
 	var dead = []
 	var need = []
@@ -172,6 +184,21 @@ func results(i):
 	results.text = results.text + "\n" + "PRICES: " + str(prices)
 	results.text = results.text + "\n" + "TOTAL NEEDS:  " + str(need)
 	results.text = results.text + "\n" + "TOTAL GREEDS: " + str(gdp)
+	survivors.get_node("Alive").text = "Alive:" + "\n" + str(alive.size())
+	survivors.get_node("Dead").text = "Dead:" + "\n" + str(dead.size())
+	var ratio = 100
+	if(dead.size() > 0):
+		ratio = dead.size()*100/(dead.size() + alive.size())
+	survivors.get_node("Ratio").value = ratio
+	if final != 0:
+		if final == 1:
+			var newResult = RESULT.instance()
+			standardPastResults.add_child(newResult)
+			newResult.text = "A: " + str(alive.size()) + ", D: " + str(dead.size()) + ", R: " + str(ratio)
+		elif final == 2:
+			var newResult = RESULT.instance()
+			pooledPastResults.add_child(newResult)
+			newResult.text = "A: " + str(alive.size()) + ", D: " + str(dead.size()) + ", R: " + str(ratio)
 	
 func instance_eed(need, greed, type):
 	var newEed = EED.instance()
@@ -205,7 +232,6 @@ func formatEedGrid():
 		var eed_width = grid.get_child(0).rect_size.x
 		var grid_width = grid.get_parent().rect_size.x
 		grid.columns = grid_width/eed_width
-		print(grid.columns)
 
 func _on_Reset_pressed():
 	reset()
@@ -276,4 +302,3 @@ func _on_DiveEdit_value_changed(value):
 
 func _on_InnerWarudo_resized():
 	formatEedGrid()
-	print("Test123")

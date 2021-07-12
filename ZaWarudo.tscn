@@ -13,7 +13,6 @@ wait_time = 0.05
 autostart = true
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-editor/display_folded = true
 margin_right = 726.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
@@ -26,7 +25,6 @@ margin_right = 726.0
 margin_bottom = 20.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/CenterContainer"]
-editor/display_folded = true
 margin_left = 153.0
 margin_right = 573.0
 margin_bottom = 20.0
@@ -91,6 +89,7 @@ margin_right = 1024.0
 margin_bottom = 600.0
 
 [node name="Variables" type="GridContainer" parent="VBoxContainer"]
+editor/display_folded = true
 margin_right = 294.0
 margin_bottom = 152.0
 columns = 4
@@ -236,16 +235,67 @@ margin_bottom = 576.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Label" type="Label" parent="VBoxContainer/CenterContainer"]
-margin_left = 121.0
-margin_top = 186.0
-margin_right = 172.0
-margin_bottom = 234.0
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/CenterContainer"]
+margin_left = 47.0
+margin_top = 141.0
+margin_right = 247.0
+margin_bottom = 279.0
+rect_min_size = Vector2( 200, 0 )
+
+[node name="Results" type="Label" parent="VBoxContainer/CenterContainer/VBoxContainer"]
+margin_right = 110.0
+margin_bottom = 116.0
 size_flags_horizontal = 2
 size_flags_vertical = 2
-text = "Results:
-Alive:
-Dead:"
+text = "Turn: 0
+ALIVE: 0
+DEAD: 0
+BANK: 0
+PRICES: []
+TOTAL NEEDS: []
+TOTAL GREEDS: []"
+
+[node name="Survivors" type="HBoxContainer" parent="VBoxContainer/CenterContainer/VBoxContainer"]
+editor/display_folded = true
+margin_top = 120.0
+margin_right = 200.0
+margin_bottom = 134.0
+
+[node name="Alive" type="Label" parent="VBoxContainer/CenterContainer/VBoxContainer/Survivors"]
+margin_right = 36.0
+margin_bottom = 14.0
+text = "Alive:"
+
+[node name="Ratio" type="ProgressBar" parent="VBoxContainer/CenterContainer/VBoxContainer/Survivors"]
+margin_left = 40.0
+margin_right = 159.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+
+[node name="Dead" type="Label" parent="VBoxContainer/CenterContainer/VBoxContainer/Survivors"]
+margin_left = 163.0
+margin_right = 200.0
+margin_bottom = 14.0
+text = "Dead:"
+
+[node name="PastResults" type="HBoxContainer" parent="VBoxContainer/CenterContainer/VBoxContainer"]
+margin_top = 138.0
+margin_right = 200.0
+margin_bottom = 138.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="Standard" type="VBoxContainer" parent="VBoxContainer/CenterContainer/VBoxContainer/PastResults"]
+margin_right = 98.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Pooled" type="VBoxContainer" parent="VBoxContainer/CenterContainer/VBoxContainer/PastResults"]
+margin_left = 102.0
+margin_right = 200.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
 [connection signal="timeout" from="TurnTimer" to="." method="_on_TurnTimer_timeout"]
 [connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Reset" to="." method="_on_Reset_pressed"]
 [connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Standard" to="." method="_on_Standard_pressed"]

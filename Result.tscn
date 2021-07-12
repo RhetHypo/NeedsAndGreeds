@@ -1,0 +1,7 @@
+[gd_scene format=2]
+
+[node name="Result" type="Label"]
+margin_right = 40.0
+margin_bottom = 14.0
+text = "TESTABC"
+percent_visible = 14.2857

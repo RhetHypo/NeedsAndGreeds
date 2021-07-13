@@ -30,12 +30,18 @@ func init(set_need, set_greed, set_type):
 func work(volatility = 0):
 	for i in range(0,needs.size()):
 		if status != STATUS.DEAD:
-			self.balances[i] = self.balances[i] + self.greeds[i] + rng.randi_range(-volatility, volatility)
+			var vol_mod = rng.randi_range(-volatility, volatility)
+			if vol_mod > 0:
+				print("VOL: ", vol_mod)
+			self.balances[i] = self.balances[i] + self.greeds[i] + vol_mod
 	#survive()
 
 func tax(index, volatility = 0, partial = 0):
 	if status != STATUS.DEAD:
-		self.balances[index] = self.balances[index] + self.greeds[index] + rng.randi_range(-volatility, volatility)
+		var vol_mod = rng.randi_range(-volatility, volatility)
+		if vol_mod > 0:
+			print("VOL: ", vol_mod)
+		self.balances[index] = self.balances[index] + self.greeds[index] + vol_mod
 		if partial != 0:
 			if balances[index] > partial:
 				var temp = partial
@@ -57,8 +63,9 @@ func buy(index, price, max_amount):
 		return required_amount
 	return 0
 
-func sell(index, price):
+func sell(index, price, waste):
 	var profit = balances[index] - needs[index]
+	profit = profit * int(float(100-waste)/100)
 	if profit > 0:
 		money += profit * price
 		balances[index] -= profit

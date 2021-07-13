@@ -14,8 +14,7 @@ wait_time = 0.05
 autostart = true
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-editor/display_folded = true
-margin_right = 649.0
+margin_right = 520.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 __meta__ = {
@@ -23,13 +22,13 @@ __meta__ = {
 }
 
 [node name="CenterContainer" type="CenterContainer" parent="MarginContainer"]
-margin_right = 649.0
+margin_right = 520.0
 margin_bottom = 24.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/CenterContainer"]
-margin_left = 114.0
+margin_left = 6.0
 margin_top = 2.0
-margin_right = 534.0
+margin_right = 514.0
 margin_bottom = 22.0
 
 [node name="Reset" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
@@ -49,27 +48,34 @@ margin_right = 235.0
 margin_bottom = 20.0
 text = "Run Pooled"
 
-[node name="Reset Stats" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
+[node name="Charity" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
 margin_left = 239.0
-margin_right = 322.0
+margin_right = 323.0
+margin_bottom = 20.0
+text = "Run Charity"
+
+[node name="Reset Stats" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
+margin_left = 327.0
+margin_right = 410.0
 margin_bottom = 20.0
 text = "Reset Stats"
 
 [node name="Pause" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
 pause_mode = 2
-margin_left = 326.0
-margin_right = 376.0
+margin_left = 414.0
+margin_right = 464.0
 margin_bottom = 20.0
 text = "Pause"
 
 [node name="Stop" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
-margin_left = 380.0
-margin_right = 420.0
+margin_left = 468.0
+margin_right = 508.0
 margin_bottom = 20.0
 text = "Stop"
 
 [node name="Amplifiers" type="HBoxContainer" parent="."]
-margin_left = 653.0
+editor/display_folded = true
+margin_left = 524.0
 margin_right = 1024.0
 margin_bottom = 24.0
 
@@ -108,27 +114,39 @@ margin_left = 297.0
 margin_right = 371.0
 margin_bottom = 24.0
 
+[node name="WasteAmpLabel" type="Label" parent="Amplifiers"]
+margin_left = 375.0
+margin_top = 5.0
+margin_right = 422.0
+margin_bottom = 19.0
+text = "W Amp"
+
+[node name="WasteAmpEdit" type="SpinBox" parent="Amplifiers"]
+margin_left = 426.0
+margin_right = 500.0
+margin_bottom = 24.0
+
 [node name="InnerWarudo" type="ScrollContainer" parent="."]
 margin_top = 28.0
-margin_right = 649.0
+margin_right = 520.0
 margin_bottom = 600.0
 size_flags_vertical = 3
 
 [node name="GridContainer" type="GridContainer" parent="InnerWarudo"]
-margin_right = 649.0
+margin_right = 520.0
 margin_bottom = 572.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-margin_left = 653.0
+margin_left = 524.0
 margin_top = 28.0
 margin_right = 1024.0
 margin_bottom = 600.0
 
 [node name="Variables" type="GridContainer" parent="VBoxContainer"]
-margin_right = 371.0
-margin_bottom = 208.0
+margin_right = 500.0
+margin_bottom = 226.0
 columns = 4
 
 [node name="PopLabel" type="Label" parent="VBoxContainer/Variables"]
@@ -243,6 +261,7 @@ margin_top = 117.0
 margin_right = 75.0
 margin_bottom = 131.0
 text = "Crash Freq"
+align = 2
 
 [node name="CrashEdit" type="SpinBox" parent="VBoxContainer/Variables"]
 margin_left = 79.0
@@ -250,83 +269,108 @@ margin_top = 112.0
 margin_right = 155.0
 margin_bottom = 136.0
 
-[node name="SpacerLabel" type="Label" parent="VBoxContainer/Variables"]
+[node name="CharityLabel" type="Label" parent="VBoxContainer/Variables"]
 margin_left = 159.0
 margin_top = 117.0
 margin_right = 260.0
 margin_bottom = 131.0
+text = "Charity"
+align = 2
+
+[node name="CharityEdit" type="SpinBox" parent="VBoxContainer/Variables"]
+margin_left = 264.0
+margin_top = 112.0
+margin_right = 340.0
+margin_bottom = 136.0
+
+[node name="SpacerLabel" type="Label" parent="VBoxContainer/Variables"]
+margin_top = 140.0
+margin_right = 75.0
+margin_bottom = 154.0
 
 [node name="SpacerLabel2" type="Label" parent="VBoxContainer/Variables"]
+margin_left = 79.0
+margin_top = 140.0
+margin_right = 155.0
+margin_bottom = 154.0
+
+[node name="SpacerLabel3" type="Label" parent="VBoxContainer/Variables"]
+margin_left = 159.0
+margin_top = 140.0
+margin_right = 260.0
+margin_bottom = 154.0
+
+[node name="SpacerLabel4" type="Label" parent="VBoxContainer/Variables"]
 margin_left = 264.0
-margin_top = 117.0
+margin_top = 140.0
 margin_right = 340.0
-margin_bottom = 131.0
+margin_bottom = 154.0
 
 [node name="SlowLabel" type="Label" parent="VBoxContainer/Variables"]
-margin_top = 153.0
+margin_top = 171.0
 margin_right = 75.0
-margin_bottom = 167.0
+margin_bottom = 185.0
 text = "Slow Mode"
 align = 2
 
 [node name="SlowEdit" type="CheckButton" parent="VBoxContainer/Variables"]
 margin_left = 79.0
-margin_top = 140.0
+margin_top = 158.0
 margin_right = 155.0
-margin_bottom = 180.0
+margin_bottom = 198.0
 
 [node name="RealismLabel" type="Label" parent="VBoxContainer/Variables"]
 margin_left = 159.0
-margin_top = 153.0
+margin_top = 171.0
 margin_right = 260.0
-margin_bottom = 167.0
+margin_bottom = 185.0
 text = "Realism"
 align = 2
 
 [node name="RealismEdit" type="CheckButton" parent="VBoxContainer/Variables"]
 margin_left = 264.0
-margin_top = 140.0
+margin_top = 158.0
 margin_right = 340.0
-margin_bottom = 180.0
+margin_bottom = 198.0
 
 [node name="NormalButton" type="CheckBox" parent="VBoxContainer/Variables"]
-margin_top = 184.0
+margin_top = 202.0
 margin_right = 75.0
-margin_bottom = 208.0
+margin_bottom = 226.0
+pressed = true
 group = ExtResource( 2 )
 text = "Normal"
 
 [node name="UtopiaButton" type="CheckBox" parent="VBoxContainer/Variables"]
 margin_left = 79.0
-margin_top = 184.0
+margin_top = 202.0
 margin_right = 155.0
-margin_bottom = 208.0
+margin_bottom = 226.0
 hint_tooltip = "Just removes needs entirely"
 group = ExtResource( 2 )
 text = "Utopia"
 
 [node name="ApocButton" type="CheckBox" parent="VBoxContainer/Variables"]
 margin_left = 159.0
-margin_top = 184.0
+margin_top = 202.0
 margin_right = 260.0
-margin_bottom = 208.0
+margin_bottom = 226.0
 hint_tooltip = "Sets greed to zero and runs until everyone is dead, recording the turns"
 group = ExtResource( 2 )
 text = "Apocalypse"
 
 [node name="CenterContainer" type="CenterContainer" parent="VBoxContainer"]
-editor/display_folded = true
-margin_top = 212.0
-margin_right = 371.0
+margin_top = 230.0
+margin_right = 500.0
 margin_bottom = 572.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/CenterContainer"]
-margin_left = 85.0
-margin_top = 111.0
-margin_right = 285.0
-margin_bottom = 249.0
+margin_left = 150.0
+margin_top = 102.0
+margin_right = 350.0
+margin_bottom = 240.0
 rect_min_size = Vector2( 200, 0 )
 
 [node name="Results" type="Label" parent="VBoxContainer/CenterContainer/VBoxContainer"]
@@ -374,12 +418,18 @@ size_flags_vertical = 3
 alignment = 1
 
 [node name="Standard" type="VBoxContainer" parent="VBoxContainer/CenterContainer/VBoxContainer/PastResults"]
-margin_right = 98.0
+margin_right = 64.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Pooled" type="VBoxContainer" parent="VBoxContainer/CenterContainer/VBoxContainer/PastResults"]
-margin_left = 102.0
+margin_left = 68.0
+margin_right = 132.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Charity" type="VBoxContainer" parent="VBoxContainer/CenterContainer/VBoxContainer/PastResults"]
+margin_left = 136.0
 margin_right = 200.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -387,6 +437,7 @@ size_flags_vertical = 3
 [connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Reset" to="." method="_on_Reset_pressed"]
 [connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Standard" to="." method="_on_Standard_pressed"]
 [connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Pooled" to="." method="_on_Pooled_pressed"]
+[connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Charity" to="." method="_on_Charity_pressed"]
 [connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Reset Stats" to="." method="_on_Reset_Stats_pressed"]
 [connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Pause" to="." method="_on_Pause_pressed"]
 [connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Stop" to="." method="_on_Stop_pressed"]
@@ -399,5 +450,10 @@ size_flags_vertical = 3
 [connection signal="value_changed" from="VBoxContainer/Variables/RichEdit" to="." method="_on_RichEdit_value_changed"]
 [connection signal="value_changed" from="VBoxContainer/Variables/SpecEdit" to="." method="_on_SpecEdit_value_changed"]
 [connection signal="value_changed" from="VBoxContainer/Variables/DiveEdit" to="." method="_on_DiveEdit_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/Variables/CrashEdit" to="." method="_on_CrashEdit_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/Variables/CharityEdit" to="." method="_on_CharityEdit_value_changed"]
 [connection signal="toggled" from="VBoxContainer/Variables/SlowEdit" to="." method="_on_CheckBox_toggled"]
 [connection signal="toggled" from="VBoxContainer/Variables/RealismEdit" to="." method="_on_RealismEdit_toggled"]
+[connection signal="button_up" from="VBoxContainer/Variables/NormalButton" to="." method="_on_NormalButton_button_up"]
+[connection signal="button_up" from="VBoxContainer/Variables/UtopiaButton" to="." method="_on_UtopiaButton_button_up"]
+[connection signal="button_up" from="VBoxContainer/Variables/ApocButton" to="." method="_on_ApocButton_button_up"]

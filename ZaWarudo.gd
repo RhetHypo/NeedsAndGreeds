@@ -1,5 +1,8 @@
 extends GridContainer
 
+enum STATUS {ALIVE, DEAD}
+enum MODE {NORMAL, UTOPIA, APOCALYPSE}
+
 export var population = 30
 export var turns = 5
 export var volatility = 10
@@ -13,14 +16,17 @@ export var realism_amplifier = .90
 export var need_amplifier = 5
 export var greed_amplifier = 5
 export var spec_amplifier = 5
+export var waste_amplifier = 10
 export var bank = []
+export var donations = 0
 export var prices = []
 export var gdp = []
 export var diversity = 3
+export var charity = 10
+export var crash = 1
+export var run_mode = MODE.NORMAL
 
 var rng = RandomNumberGenerator.new()
-
-enum STATUS {ALIVE, DEAD}
 
 const EED = preload("res://Eed.tscn")
 const RESULT = preload("res://Result.tscn")
@@ -32,6 +38,7 @@ onready var amplifiers = get_node("Amplifiers")
 onready var survivors = get_node("VBoxContainer/CenterContainer/VBoxContainer/Survivors")
 onready var standardPastResults = get_node("VBoxContainer/CenterContainer/VBoxContainer/PastResults/Standard")
 onready var pooledPastResults = get_node("VBoxContainer/CenterContainer/VBoxContainer/PastResults/Pooled")
+onready var charityPastResults = get_node("VBoxContainer/CenterContainer/VBoxContainer/PastResults/Charity")
 
 signal next_turn
 
@@ -49,11 +56,21 @@ func _ready():
 	variables.get_node("RichEdit").value = rich
 	variables.get_node("SpecEdit").value = spec
 	variables.get_node("DiveEdit").value = diversity
+	variables.get_node("CrashEdit").value = crash
+	variables.get_node("CharityEdit").value = charity
 	variables.get_node("SlowEdit").pressed = slow
 	variables.get_node("RealismEdit").pressed = realism
 	amplifiers.get_node("GreedAmpEdit").value = greed_amplifier
 	amplifiers.get_node("NeedAmpEdit").value = need_amplifier
-	amplifiers.get_node("")
+	amplifiers.get_node("SpecAmpEdit").value = spec_amplifier
+	amplifiers.get_node("WasteAmpEdit").value = waste_amplifier
+	match run_mode:
+		MODE.NORMAL:
+			variables.get_node("NormalButton").pressed = true
+		MODE.UTOPIA:
+			variables.get_node("UtopiaButton").pressed = true
+		MODE.APOCALYPSE:
+			variables.get_node("ApocButton").pressed = true
 	
 func initialize():
 	for child in grid.get_children():
@@ -62,6 +79,8 @@ func initialize():
 		standardPastResults.remove_child(child)
 	for child in pooledPastResults.get_children():
 		pooledPastResults.remove_child(child)
+	for child in charityPastResults.get_children():
+		charityPastResults.remove_child(child)
 	rng.randomize()
 	grid.columns = 10#sqrt(population)
 	var curPoor = poor
@@ -93,7 +112,6 @@ func initialize():
 			elif(curType == "Spec"):
 				if j == rand_spec:
 					newGreeds[j] = int((newGreeds[j]+1)*greed_amplifier*spec_amplifier)
-			#TODO: This no longer makes sense, need to overhaul
 		if(realism):
 			var totalGreed = 0
 			for k in range(0,diversity):
@@ -107,7 +125,7 @@ func initialize():
 	initial_state = grid.get_children().duplicate()
 	formatEedGrid()
 
-func run_standard_simulation():
+func run_standard_simulation(give_charity = false):
 	reset()
 	stopped = false
 	for i in range(turns):
@@ -125,13 +143,23 @@ func run_standard_simulation():
 				child.select(false)
 		for child in grid.get_children():#sell phase
 			for j in range(0,diversity):
-				bank[j] += child.sell(j,prices[j])
+				if realism:#apply waste
+					bank[j] += child.sell(j,prices[j], waste_amplifier)
+				else:#don't apply waste
+					bank[j] += child.sell(j,prices[j], 0)
 		for child in grid.get_children():#buy/survive phase
 			for j in range(0,diversity):
 				bank[j] -= child.buy(j,prices[j],bank[j])
+			if give_charity and child.money > 0:
+				var temp_donation = child.money * float(float(100-waste_amplifier)/100)
+				donations = temp_donation
+				child.money = child.money - temp_donation 
 			child.survive()
 		results(i + 1)
-	results(turns,1)
+	if give_charity:
+		results(turns,3)
+	else:
+		results(turns,1)
 
 func run_pooled_simulation():
 	reset()
@@ -145,6 +173,9 @@ func run_pooled_simulation():
 			for child in grid.get_children():
 				if child.status == STATUS.ALIVE:
 					var tax = child.tax(j,volatility)
+					if realism:#apply waste
+						tax = tax * int(float(100-waste_amplifier)/100)
+						print("waste: ",int(float(100-waste_amplifier)/100))
 					bank[j] = bank[j] + tax
 			results(i + 1)
 		for j in range(0,diversity):#stimulus phase
@@ -192,17 +223,17 @@ func results(i, final=0):
 	survivors.get_node("Dead").text = "Dead:" + "\n" + str(dead.size())
 	var ratio = 100
 	if(dead.size() > 0):
-		ratio = dead.size()*100/(dead.size() + alive.size())
+		ratio = alive.size()*100/(dead.size() + alive.size())
 	survivors.get_node("Ratio").value = ratio
 	if final != 0:
+		var newResult = RESULT.instance()
 		if final == 1:
-			var newResult = RESULT.instance()
 			standardPastResults.add_child(newResult)
-			newResult.text = "A: " + str(alive.size()) + ", D: " + str(dead.size()) + ", R: " + str(ratio)
 		elif final == 2:
-			var newResult = RESULT.instance()
 			pooledPastResults.add_child(newResult)
-			newResult.text = "A: " + str(alive.size()) + ", D: " + str(dead.size()) + ", R: " + str(ratio)
+		elif final == 3:
+			charityPastResults.add_child(newResult)
+		newResult.text = "A: " + str(alive.size()) + ", D: " + str(dead.size()) + ", R: " + str(ratio)
 	
 func instance_eed(need, greed, type):
 	var newEed = EED.instance()
@@ -248,6 +279,8 @@ func _on_Standard_pressed():
 func _on_Pooled_pressed():
 	run_pooled_simulation()
 
+func _on_Charity_pressed():
+	run_standard_simulation(true)
 
 func _on_Reset_Stats_pressed():
 	initialize()
@@ -304,5 +337,23 @@ func _on_VolEdit_value_changed(value):
 func _on_DiveEdit_value_changed(value):
 	diversity = value
 
+func _on_CrashEdit_value_changed(value):
+	crash = value
+
+func _on_CharityEdit_value_changed(value):
+	charity = value
+
 func _on_InnerWarudo_resized():
 	formatEedGrid()
+
+
+func _on_NormalButton_button_up():
+	print("Normal pressed")
+
+
+func _on_UtopiaButton_button_up():
+	print("Utopia pressed")
+
+
+func _on_ApocButton_button_up():
+	print("APOC pressed")

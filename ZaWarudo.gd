@@ -12,7 +12,7 @@ export var rich = 10
 export var spec = 10
 export var slow = false
 export var realism = true#need is increased to be a percentage of greed, a.k.a. you need to spend money to make money
-export var realism_amplifier = .90
+export var realism_amplifier = .50
 export var need_amplifier = 5
 export var greed_amplifier = 5
 export var spec_amplifier = 5
@@ -21,12 +21,14 @@ export var bank = []
 export var donations = 0
 export var prices = []
 export var gdp = []
+export var temp_dead = []#just used for a quick workaround with apocalypse
 export var diversity = 3
 export var charity = 10
-export var crash = 1
+export var crash = 0
 export var run_mode = MODE.NORMAL
 
 var rng = RandomNumberGenerator.new()
+var total_crashes = 0
 
 const EED = preload("res://Eed.tscn")
 const RESULT = preload("res://Result.tscn")
@@ -64,6 +66,7 @@ func _ready():
 	amplifiers.get_node("NeedAmpEdit").value = need_amplifier
 	amplifiers.get_node("SpecAmpEdit").value = spec_amplifier
 	amplifiers.get_node("WasteAmpEdit").value = waste_amplifier
+	amplifiers.get_node("RealAmpEdit").value = realism_amplifier
 	match run_mode:
 		MODE.NORMAL:
 			variables.get_node("NormalButton").pressed = true
@@ -103,8 +106,6 @@ func initialize():
 		for j in range(0,diversity):
 			newNeeds.append(int(deviation/2)) #* int(need_amplifier)
 			newGreeds.append(rng.randi_range(0, deviation))
-			#newNeeds.append(5)
-			#newGreeds.append(5)
 			if(curType == "Poor"):
 				newGreeds[j] = int(newGreeds[j]/greed_amplifier)
 			elif(curType == "Rich"):
@@ -136,7 +137,11 @@ func run_standard_simulation(give_charity = false):
 		for child in grid.get_children():#work phase
 			if stopped:
 				break
-			child.work(volatility)
+			var checkCrash = rng.randi_range(0, 100)
+			if crash <= checkCrash:
+				child.work(volatility)
+			else:
+				total_crashes += 1
 			if slow:
 				child.select(true)
 				yield(self,"next_turn")
@@ -154,12 +159,31 @@ func run_standard_simulation(give_charity = false):
 				var temp_donation = child.money * float(float(100-waste_amplifier)/100)
 				donations = temp_donation
 				child.money = child.money - temp_donation 
-			child.survive()
+			if run_mode != MODE.UTOPIA:
+				child.survive()
 		results(i + 1)
-	if give_charity:
-		results(turns,3)
+	if run_mode != MODE.APOCALYPSE:
+		if give_charity:
+			results(turns,3)
+		else:
+			results(turns,1)
 	else:
-		results(turns,1)
+		var extra_turns = 0
+		while temp_dead.size() < population:
+			for child in grid.get_children():#buy/survive phase
+				for j in range(0,diversity):
+					bank[j] -= child.buy(j,prices[j],bank[j])
+				if give_charity and child.money > 0:
+					var temp_donation = child.money * float(float(100-waste_amplifier)/100)
+					donations = temp_donation
+					child.money = child.money - temp_donation 
+				child.survive()
+			extra_turns += 1
+			results(turns+extra_turns)
+		if give_charity:
+			results(turns+1+extra_turns,3)
+		else:
+			results(turns+1+extra_turns,1)
 
 func run_pooled_simulation():
 	reset()
@@ -177,22 +201,43 @@ func run_pooled_simulation():
 						tax = tax * int(float(100-waste_amplifier)/100)
 						print("waste: ",int(float(100-waste_amplifier)/100))
 					bank[j] = bank[j] + tax
-			results(i + 1)
+			#results(i + 1)
 		for j in range(0,diversity):#stimulus phase
 			for child in grid.get_children():
 				if bank[j] > child.needs[j] and child.status == STATUS.ALIVE:
 					child.stim(child.needs[j], j)
 					bank[j] = bank[j] - child.needs[j]
-			results(i + 1)
+			#results(i + 1)
 		for child in grid.get_children():#survive phase
-			child.survive()
+			if run_mode != MODE.UTOPIA:
+				child.survive()
 			if slow:
 				child.select(true)
 				yield(self,"next_turn")
 				child.select(false)
-			results(i + 1)
+			#results(i + 1)
 		results(i + 1)
-	results(turns,2)
+	if run_mode != MODE.APOCALYPSE:
+		results(turns,2)
+	else:
+		var extra_turns = 0
+		while temp_dead.size() < population:
+			for j in range(0,diversity):#stimulus phase
+				for child in grid.get_children():
+					if bank[j] > child.needs[j] and child.status == STATUS.ALIVE:
+						child.stim(child.needs[j], j)
+						bank[j] = bank[j] - child.needs[j]
+				#results(i + 1)
+			for child in grid.get_children():#survive phase
+				child.survive()
+				if slow:
+					child.select(true)
+					yield(self,"next_turn")
+					child.select(false)
+				#results(i + 1)
+			results(turns+1+extra_turns)
+		results(turns+1+extra_turns,2)
+		
 
 func results(i, final=0):
 	var alive = []
@@ -211,6 +256,7 @@ func results(i, final=0):
 			dead.append(child)
 		elif child.status == STATUS.ALIVE:
 			alive.append(child)
+	temp_dead = dead.duplicate()
 	prices()
 	results.text = "Turn: " + str(i)
 	results.text = results.text + "\n" + "ALIVE: " + str(alive.size())
@@ -233,14 +279,19 @@ func results(i, final=0):
 			pooledPastResults.add_child(newResult)
 		elif final == 3:
 			charityPastResults.add_child(newResult)
-		newResult.text = "A: " + str(alive.size()) + ", D: " + str(dead.size()) + ", R: " + str(ratio)
-	
+		if run_mode == MODE.NORMAL:
+			newResult.text = "A: " + str(alive.size()) + ", D: " + str(dead.size()) + ", R: " + str(ratio) + ", C: " + str(total_crashes)
+		elif run_mode == MODE.APOCALYPSE:
+			newResult.text = "TURNS: " + str(i)
+		elif run_mode == MODE.UTOPIA:
+			newResult.text = "Everything is fine."
 func instance_eed(need, greed, type):
 	var newEed = EED.instance()
 	newEed.init(need,greed,type)
 	grid.add_child(newEed)
 
 func reset():
+	total_crashes = 0
 	stopped = true
 	yield(self,"next_turn")
 	var current_children = grid.get_children()
@@ -346,14 +397,26 @@ func _on_CharityEdit_value_changed(value):
 func _on_InnerWarudo_resized():
 	formatEedGrid()
 
-
 func _on_NormalButton_button_up():
-	print("Normal pressed")
-
+	run_mode = MODE.NORMAL
 
 func _on_UtopiaButton_button_up():
-	print("Utopia pressed")
-
+	run_mode = MODE.UTOPIA
 
 func _on_ApocButton_button_up():
-	print("APOC pressed")
+	run_mode = MODE.APOCALYPSE
+
+func _on_NeedAmpEdit_value_changed(value):
+	need_amplifier = value
+
+func _on_GreedAmpEdit_value_changed(value):
+	greed_amplifier = value
+
+func _on_SpecAmpEdit_value_changed(value):
+	spec_amplifier = value
+
+func _on_WasteAmpEdit_value_changed(value):
+	waste_amplifier = value
+
+func _on_RealAmpEdit_value_changed(value):
+	realism_amplifier = value

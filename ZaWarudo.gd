@@ -21,6 +21,7 @@ export var bank = []
 export var donations = 0
 export var prices = []
 export var gdp = []
+export var gdp_cost = []
 export var temp_dead = []#just used for a quick workaround with apocalypse
 export var diversity = 3
 export var charity = 10
@@ -155,7 +156,7 @@ func run_standard_simulation(give_charity = false):
 		for child in grid.get_children():#buy/survive phase
 			for j in range(0,diversity):
 				bank[j] -= child.buy(j,prices[j],bank[j])
-			if give_charity and child.money > 0:
+			if give_charity and child.money > 0:#TODO: IMPLEMENT PEOPLE TAKING FROM CHARITY WHEN NEEDED
 				var temp_donation = child.money * float(float(100-waste_amplifier)/100)
 				donations = temp_donation
 				child.money = child.money - temp_donation 
@@ -243,21 +244,14 @@ func results(i, final=0):
 	var alive = []
 	var dead = []
 	var need = []
-	gdp = []
-	for i in range(0,diversity):
-		gdp.append(0)
-		need.append(0)
 	for child in grid.get_children():
-		for i in child.needs.size():
-			need[i] += child.needs[i]
-		for i in child.greeds.size():
-			gdp[i] += child.greeds[i]
 		if child.status == STATUS.DEAD:
 			dead.append(child)
 		elif child.status == STATUS.ALIVE:
 			alive.append(child)
 	temp_dead = dead.duplicate()
-	prices()
+	calc_gpd()
+	calc_prices()
 	results.text = "Turn: " + str(i)
 	results.text = results.text + "\n" + "ALIVE: " + str(alive.size())
 	results.text = results.text + "\n" + "DEAD: " + str(dead.size())
@@ -302,7 +296,7 @@ func reset():
 		bank.append(0)
 	results(0)
 	
-func prices():
+func calc_prices():
 	var gross = 0
 	prices = []
 	for good in gdp:
@@ -312,6 +306,20 @@ func prices():
 			prices.append(1)
 		else:
 			prices.append(float(float(gross)/float(good)/gdp.size()))
+	print(prices)
+
+func calc_gpd():
+	gdp = []
+	gdp_cost = []
+	for i in range(0,diversity):
+		gdp.append(0)
+		gdp_cost.append(0)
+	for child in grid.get_children():
+		if child.status != STATUS.DEAD:
+			for i in child.greeds.size():
+				gdp[i] += child.greeds[i]
+			for i in child.needs.size():
+				gdp_cost[i] += child.needs[i]
 
 func formatEedGrid():
 	if grid.get_child_count() > 0:

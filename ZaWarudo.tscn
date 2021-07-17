@@ -14,21 +14,23 @@ wait_time = 0.05
 autostart = true
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-margin_right = 508.0
-margin_bottom = 24.0
+margin_right = 646.0
+margin_bottom = 70.0
 size_flags_horizontal = 3
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="CenterContainer" type="CenterContainer" parent="MarginContainer"]
-margin_right = 508.0
-margin_bottom = 24.0
+editor/display_folded = true
+margin_right = 646.0
+margin_bottom = 70.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/CenterContainer"]
-margin_top = 2.0
-margin_right = 508.0
-margin_bottom = 22.0
+margin_left = 69.0
+margin_top = 25.0
+margin_right = 577.0
+margin_bottom = 45.0
 
 [node name="Reset" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
 margin_right = 48.0
@@ -72,91 +74,116 @@ margin_right = 508.0
 margin_bottom = 20.0
 text = "Stop"
 
-[node name="Amplifiers" type="HBoxContainer" parent="."]
-margin_left = 512.0
-margin_right = 1141.0
-margin_bottom = 24.0
+[node name="AmpifiersSection" type="VBoxContainer" parent="."]
+margin_left = 650.0
+margin_right = 1024.0
+margin_bottom = 70.0
 
-[node name="NeedAmpLabel" type="Label" parent="Amplifiers"]
+[node name="AmplifiersLabel" type="Label" parent="AmpifiersSection"]
+margin_right = 374.0
+margin_bottom = 14.0
+text = "Amplifiers"
+align = 1
+
+[node name="Amplifiers" type="GridContainer" parent="AmpifiersSection"]
+margin_top = 18.0
+margin_right = 374.0
+margin_bottom = 70.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_min_size = Vector2( 350, 0 )
+columns = 6
+
+[node name="NeedAmpLabel" type="Label" parent="AmpifiersSection/Amplifiers"]
 margin_top = 5.0
-margin_right = 44.0
+margin_right = 47.0
 margin_bottom = 19.0
 text = "N Amp"
 
-[node name="NeedAmpEdit" type="SpinBox" parent="Amplifiers"]
-margin_left = 48.0
-margin_right = 122.0
+[node name="NeedAmpEdit" type="SpinBox" parent="AmpifiersSection/Amplifiers"]
+margin_left = 51.0
+margin_right = 125.0
 margin_bottom = 24.0
 
-[node name="GreedAmpLabel" type="Label" parent="Amplifiers"]
-margin_left = 126.0
+[node name="GreedAmpLabel" type="Label" parent="AmpifiersSection/Amplifiers"]
+margin_left = 129.0
 margin_top = 5.0
-margin_right = 170.0
+margin_right = 173.0
 margin_bottom = 19.0
 text = "G Amp"
 
-[node name="GreedAmpEdit" type="SpinBox" parent="Amplifiers"]
-margin_left = 174.0
-margin_right = 248.0
+[node name="GreedAmpEdit" type="SpinBox" parent="AmpifiersSection/Amplifiers"]
+margin_left = 177.0
+margin_right = 251.0
 margin_bottom = 24.0
 
-[node name="SpecAmpLabel" type="Label" parent="Amplifiers"]
-margin_left = 252.0
+[node name="SpecAmpLabel" type="Label" parent="AmpifiersSection/Amplifiers"]
+margin_left = 255.0
 margin_top = 5.0
-margin_right = 293.0
+margin_right = 296.0
 margin_bottom = 19.0
 text = "S Amp"
 
-[node name="SpecAmpEdit" type="SpinBox" parent="Amplifiers"]
-margin_left = 297.0
-margin_right = 371.0
+[node name="SpecAmpEdit" type="SpinBox" parent="AmpifiersSection/Amplifiers"]
+margin_left = 300.0
+margin_right = 374.0
 margin_bottom = 24.0
 
-[node name="WasteAmpLabel" type="Label" parent="Amplifiers"]
-margin_left = 375.0
-margin_top = 5.0
-margin_right = 422.0
-margin_bottom = 19.0
+[node name="WasteAmpLabel" type="Label" parent="AmpifiersSection/Amplifiers"]
+margin_top = 33.0
+margin_right = 47.0
+margin_bottom = 47.0
 text = "W Amp"
 
-[node name="WasteAmpEdit" type="SpinBox" parent="Amplifiers"]
-margin_left = 426.0
-margin_right = 500.0
-margin_bottom = 24.0
+[node name="WasteAmpEdit" type="SpinBox" parent="AmpifiersSection/Amplifiers"]
+margin_left = 51.0
+margin_top = 28.0
+margin_right = 125.0
+margin_bottom = 52.0
 
-[node name="RealAmpLabel" type="Label" parent="Amplifiers"]
-margin_left = 504.0
-margin_top = 5.0
-margin_right = 551.0
-margin_bottom = 19.0
-text = "W Amp"
+[node name="RealAmpLabel" type="Label" parent="AmpifiersSection/Amplifiers"]
+margin_left = 129.0
+margin_top = 33.0
+margin_right = 173.0
+margin_bottom = 47.0
+text = "R Amp"
 
-[node name="RealAmpEdit" type="SpinBox" parent="Amplifiers"]
-margin_left = 555.0
-margin_right = 629.0
-margin_bottom = 24.0
+[node name="RealAmpEdit" type="SpinBox" parent="AmpifiersSection/Amplifiers"]
+margin_left = 177.0
+margin_top = 28.0
+margin_right = 251.0
+margin_bottom = 52.0
 
 [node name="InnerWarudo" type="ScrollContainer" parent="."]
-margin_top = 28.0
-margin_right = 508.0
+margin_top = 74.0
+margin_right = 646.0
 margin_bottom = 600.0
 size_flags_vertical = 3
 
 [node name="GridContainer" type="GridContainer" parent="InnerWarudo"]
-margin_right = 508.0
-margin_bottom = 572.0
+margin_right = 646.0
+margin_bottom = 526.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-margin_left = 512.0
-margin_top = 28.0
-margin_right = 1141.0
+margin_left = 650.0
+margin_top = 74.0
+margin_right = 1024.0
 margin_bottom = 600.0
 
+[node name="VariablesLabel" type="Label" parent="VBoxContainer"]
+margin_right = 374.0
+margin_bottom = 14.0
+text = "Variables"
+align = 1
+
 [node name="Variables" type="GridContainer" parent="VBoxContainer"]
-margin_right = 629.0
-margin_bottom = 226.0
+editor/display_folded = true
+margin_top = 18.0
+margin_right = 374.0
+margin_bottom = 244.0
+rect_min_size = Vector2( 350, 0 )
 columns = 4
 
 [node name="PopLabel" type="Label" parent="VBoxContainer/Variables"]
@@ -370,17 +397,17 @@ group = ExtResource( 2 )
 text = "Apocalypse"
 
 [node name="CenterContainer" type="CenterContainer" parent="VBoxContainer"]
-margin_top = 230.0
-margin_right = 629.0
-margin_bottom = 572.0
+margin_top = 248.0
+margin_right = 374.0
+margin_bottom = 526.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/CenterContainer"]
-margin_left = 214.0
-margin_top = 102.0
-margin_right = 414.0
-margin_bottom = 240.0
+margin_left = 87.0
+margin_top = 70.0
+margin_right = 287.0
+margin_bottom = 208.0
 rect_min_size = Vector2( 200, 0 )
 
 [node name="Results" type="Label" parent="VBoxContainer/CenterContainer/VBoxContainer"]
@@ -451,11 +478,11 @@ size_flags_vertical = 3
 [connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Reset Stats" to="." method="_on_Reset_Stats_pressed"]
 [connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Pause" to="." method="_on_Pause_pressed"]
 [connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Stop" to="." method="_on_Stop_pressed"]
-[connection signal="value_changed" from="Amplifiers/NeedAmpEdit" to="." method="_on_NeedAmpEdit_value_changed"]
-[connection signal="value_changed" from="Amplifiers/GreedAmpEdit" to="." method="_on_GreedAmpEdit_value_changed"]
-[connection signal="value_changed" from="Amplifiers/SpecAmpEdit" to="." method="_on_SpecAmpEdit_value_changed"]
-[connection signal="value_changed" from="Amplifiers/WasteAmpEdit" to="." method="_on_WasteAmpEdit_value_changed"]
-[connection signal="value_changed" from="Amplifiers/RealAmpEdit" to="." method="_on_RealAmpEdit_value_changed"]
+[connection signal="value_changed" from="AmpifiersSection/Amplifiers/NeedAmpEdit" to="." method="_on_NeedAmpEdit_value_changed"]
+[connection signal="value_changed" from="AmpifiersSection/Amplifiers/GreedAmpEdit" to="." method="_on_GreedAmpEdit_value_changed"]
+[connection signal="value_changed" from="AmpifiersSection/Amplifiers/SpecAmpEdit" to="." method="_on_SpecAmpEdit_value_changed"]
+[connection signal="value_changed" from="AmpifiersSection/Amplifiers/WasteAmpEdit" to="." method="_on_WasteAmpEdit_value_changed"]
+[connection signal="value_changed" from="AmpifiersSection/Amplifiers/RealAmpEdit" to="." method="_on_RealAmpEdit_value_changed"]
 [connection signal="resized" from="InnerWarudo" to="." method="_on_InnerWarudo_resized"]
 [connection signal="value_changed" from="VBoxContainer/Variables/PopEdit" to="." method="_on_PopEdit_value_changed"]
 [connection signal="value_changed" from="VBoxContainer/Variables/TurnsEdit" to="." method="_on_TurnsEdit_value_changed"]

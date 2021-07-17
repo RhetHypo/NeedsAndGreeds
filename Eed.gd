@@ -63,6 +63,22 @@ func buy(index, price, max_amount):
 		return required_amount
 	return 0
 
+func needs_charity(index, price, max_amount, donations):
+	var required_amount = needs[index] - balances[index]
+	var required_price = (required_amount) * price
+	if required_amount > 0 and required_amount <= max_amount and required_price < donations + money:
+		return true
+	return false
+
+func get_charity_donation(index, price, max_amount, donations):
+	var required_amount = needs[index] - balances[index]
+	var required_price = (required_amount) * price
+	if required_price < donations + money:
+		var charity_amount = required_price - money
+		money += charity_amount
+		return charity_amount
+	return 0#I don't think this should ever happen
+
 func sell(index, price, waste):
 	var profit = balances[index] - needs[index]
 	profit = profit * int(float(100-waste)/100)

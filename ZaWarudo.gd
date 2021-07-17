@@ -12,7 +12,7 @@ export var rich = 10
 export var spec = 10
 export var slow = false
 export var realism = true#need is increased to be a percentage of greed, a.k.a. you need to spend money to make money
-export var realism_amplifier = .50
+export var realism_amplifier = .25
 export var need_amplifier = 5
 export var greed_amplifier = 5
 export var spec_amplifier = 5
@@ -37,7 +37,7 @@ const RESULT = preload("res://Result.tscn")
 onready var grid = get_node("InnerWarudo/GridContainer")
 onready var results = get_node("VBoxContainer/CenterContainer/VBoxContainer/Results")
 onready var variables = get_node("VBoxContainer/Variables")
-onready var amplifiers = get_node("Amplifiers")
+onready var amplifiers = get_node("AmpifiersSection/Amplifiers")
 onready var survivors = get_node("VBoxContainer/CenterContainer/VBoxContainer/Survivors")
 onready var standardPastResults = get_node("VBoxContainer/CenterContainer/VBoxContainer/PastResults/Standard")
 onready var pooledPastResults = get_node("VBoxContainer/CenterContainer/VBoxContainer/PastResults/Pooled")
@@ -67,7 +67,7 @@ func _ready():
 	amplifiers.get_node("NeedAmpEdit").value = need_amplifier
 	amplifiers.get_node("SpecAmpEdit").value = spec_amplifier
 	amplifiers.get_node("WasteAmpEdit").value = waste_amplifier
-	amplifiers.get_node("RealAmpEdit").value = realism_amplifier
+	amplifiers.get_node("RealAmpEdit").value = realism_amplifier * 100
 	match run_mode:
 		MODE.NORMAL:
 			variables.get_node("NormalButton").pressed = true
@@ -159,7 +159,18 @@ func run_standard_simulation(give_charity = false):
 			if give_charity and child.money > 0:#TODO: IMPLEMENT PEOPLE TAKING FROM CHARITY WHEN NEEDED
 				var temp_donation = child.money * float(float(100-waste_amplifier)/100)
 				donations = temp_donation
-				child.money = child.money - temp_donation 
+				child.money = child.money - temp_donation
+			for j in range(0,diversity):#if below threshold, check charity
+				var charityCheck = child.needs_charity(j,prices[j],bank[j],donations)
+				if charityCheck:#this COULD potentially be simplified...
+					print("charity")
+					var temp_donation = child.get_charity_donation(j,prices[j],bank[j],donations)
+					if temp_donation > 0:
+						donations -= temp_donation
+						bank[j] -= child.buy(j,prices[j],bank[j])
+#					var temp_donation = child.get_charity_donation(donations)
+#					donations -= temp_donation
+#					bank[j] -= child.buy(j,prices[j],bank[j])
 			if run_mode != MODE.UTOPIA:
 				child.survive()
 		results(i + 1)
@@ -257,7 +268,7 @@ func results(i, final=0):
 	results.text = results.text + "\n" + "DEAD: " + str(dead.size())
 	results.text = results.text + "\n" + "BANK: " + str(bank)
 	results.text = results.text + "\n" + "PRICES: " + str(prices)
-	results.text = results.text + "\n" + "TOTAL NEEDS:  " + str(need)
+	results.text = results.text + "\n" + "TOTAL NEEDS:  " + str(gdp_cost)
 	results.text = results.text + "\n" + "TOTAL GREEDS: " + str(gdp)
 	survivors.get_node("Alive").text = "Alive:" + "\n" + str(alive.size())
 	survivors.get_node("Dead").text = "Dead:" + "\n" + str(dead.size())
@@ -427,4 +438,4 @@ func _on_WasteAmpEdit_value_changed(value):
 	waste_amplifier = value
 
 func _on_RealAmpEdit_value_changed(value):
-	realism_amplifier = value
+	realism_amplifier = float(value / 100)

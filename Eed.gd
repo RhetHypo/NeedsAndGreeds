@@ -19,7 +19,7 @@ func _ready():
 func init(set_need, set_greed, set_type):
 	needs = set_need.duplicate()
 	greeds = set_greed.duplicate()
-	#volatility = set_vol
+	money = 0
 	balances = set_need.duplicate()#not sure why I can't just loop by size and append
 	for i in range(0,balances.size()):
 		balances[i] = 0
@@ -31,16 +31,12 @@ func work(volatility = 0):
 	for i in range(0,needs.size()):
 		if status != STATUS.DEAD:
 			var vol_mod = rng.randi_range(-volatility, volatility)
-			if vol_mod > 0:
-				print("VOL: ", vol_mod)
 			self.balances[i] = self.balances[i] + self.greeds[i] + vol_mod
 	#survive()
 
 func tax(index, volatility = 0, partial = 0):
 	if status != STATUS.DEAD:
 		var vol_mod = rng.randi_range(-volatility, volatility)
-		if vol_mod > 0:
-			print("VOL: ", vol_mod)
 		self.balances[index] = self.balances[index] + self.greeds[index] + vol_mod
 		if partial != 0:
 			if balances[index] > partial:
@@ -81,7 +77,7 @@ func get_charity_donation(index, price, max_amount, donations):
 
 func sell(index, price, waste):
 	var profit = balances[index] - needs[index]
-	profit = profit * int(float(100-waste)/100)
+	profit = int(profit * float(float(100-waste)/100))
 	if profit > 0:
 		money += profit * price
 		balances[index] -= profit
@@ -92,7 +88,7 @@ func survive():
 	if self.status != STATUS.DEAD:
 		for i in range(0,needs.size()):
 			balances[i] = balances[i] - needs[i]
-			hint_tooltip = "Type: " + type + ", Need: " + str(needs) + ", Greed: " + str(greeds) + ", Current: " + str(balances)
+			hint_tooltip = "Type: " + type + ", Need: " + str(needs) + ", Greed: " + str(greeds) + ", Current: " + str(balances) + ", Money: " + str(money)
 			if balances[i] < 0:
 				balances[i] = 0
 				self.set_status(STATUS.DEAD)

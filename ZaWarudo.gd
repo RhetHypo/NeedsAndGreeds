@@ -4,7 +4,7 @@ enum STATUS {ALIVE, DEAD}
 enum MODE {NORMAL, UTOPIA, APOCALYPSE}
 
 export var population = 30
-export var turns = 5
+export var turns = 20
 export var volatility = 10
 export var deviation = 10
 export var poor = 10
@@ -12,7 +12,7 @@ export var rich = 10
 export var spec = 10
 export var slow = false
 export var realism = true#need is increased to be a percentage of greed, a.k.a. you need to spend money to make money
-export var realism_amplifier = .25
+export var realism_amplifier = .50
 export var need_amplifier = 5
 export var greed_amplifier = 5
 export var spec_amplifier = 5
@@ -79,14 +79,9 @@ func _ready():
 func initialize():
 	for child in grid.get_children():
 		grid.remove_child(child)
-	for child in standardPastResults.get_children():
-		standardPastResults.remove_child(child)
-	for child in pooledPastResults.get_children():
-		pooledPastResults.remove_child(child)
-	for child in charityPastResults.get_children():
-		charityPastResults.remove_child(child)
+	clear_results()
 	rng.randomize()
-	grid.columns = 10#sqrt(population)
+	grid.columns = 10
 	var curPoor = poor
 	var curRich = rich
 	var curSpec = spec
@@ -145,7 +140,10 @@ func run_standard_simulation(give_charity = false):
 				total_crashes += 1
 			if slow:
 				child.select(true)
-				yield(self,"next_turn")
+				if stopped:
+					break
+				else:
+					yield(self,"next_turn")
 				child.select(false)
 		for child in grid.get_children():#sell phase
 			for j in range(0,diversity):
@@ -163,7 +161,6 @@ func run_standard_simulation(give_charity = false):
 			for j in range(0,diversity):#if below threshold, check charity
 				var charityCheck = child.needs_charity(j,prices[j],bank[j],donations)
 				if charityCheck:#this COULD potentially be simplified...
-					print("charity")
 					var temp_donation = child.get_charity_donation(j,prices[j],bank[j],donations)
 					if temp_donation > 0:
 						donations -= temp_donation
@@ -196,6 +193,7 @@ func run_standard_simulation(give_charity = false):
 			results(turns+1+extra_turns,3)
 		else:
 			results(turns+1+extra_turns,1)
+	stopped = true
 
 func run_pooled_simulation():
 	reset()
@@ -210,8 +208,7 @@ func run_pooled_simulation():
 				if child.status == STATUS.ALIVE:
 					var tax = child.tax(j,volatility)
 					if realism:#apply waste
-						tax = tax * int(float(100-waste_amplifier)/100)
-						print("waste: ",int(float(100-waste_amplifier)/100))
+						tax = int(tax * float(100-waste_amplifier)/100)
 					bank[j] = bank[j] + tax
 			#results(i + 1)
 		for j in range(0,diversity):#stimulus phase
@@ -225,7 +222,10 @@ func run_pooled_simulation():
 				child.survive()
 			if slow:
 				child.select(true)
-				yield(self,"next_turn")
+				if stopped:
+					break
+				else:
+					yield(self,"next_turn")
 				child.select(false)
 			#results(i + 1)
 		results(i + 1)
@@ -244,12 +244,15 @@ func run_pooled_simulation():
 				child.survive()
 				if slow:
 					child.select(true)
-					yield(self,"next_turn")
+					if stopped:
+						break
+					else:
+						yield(self,"next_turn")
 					child.select(false)
 				#results(i + 1)
 			results(turns+1+extra_turns)
 		results(turns+1+extra_turns,2)
-		
+	stopped = true
 
 func results(i, final=0):
 	var alive = []
@@ -280,10 +283,13 @@ func results(i, final=0):
 		var newResult = RESULT.instance()
 		if final == 1:
 			standardPastResults.add_child(newResult)
+			standardPastResults.move_child(newResult, 0)
 		elif final == 2:
 			pooledPastResults.add_child(newResult)
+			pooledPastResults.move_child(newResult, 0)
 		elif final == 3:
 			charityPastResults.add_child(newResult)
+			charityPastResults.move_child(newResult, 0)
 		if run_mode == MODE.NORMAL:
 			newResult.text = "A: " + str(alive.size()) + ", D: " + str(dead.size()) + ", R: " + str(ratio) + ", C: " + str(total_crashes)
 		elif run_mode == MODE.APOCALYPSE:
@@ -317,7 +323,6 @@ func calc_prices():
 			prices.append(1)
 		else:
 			prices.append(float(float(gross)/float(good)/gdp.size()))
-	print(prices)
 
 func calc_gpd():
 	gdp = []
@@ -337,20 +342,30 @@ func formatEedGrid():
 		var eed_width = grid.get_child(0).rect_size.x
 		var grid_width = grid.get_parent().rect_size.x
 		grid.columns = grid_width/eed_width
+func clear_results():
+	for child in standardPastResults.get_children():
+		standardPastResults.remove_child(child)
+	for child in pooledPastResults.get_children():
+		pooledPastResults.remove_child(child)
+	for child in charityPastResults.get_children():
+		charityPastResults.remove_child(child)
 
 func _on_Reset_pressed():
 	reset()
 
 
 func _on_Standard_pressed():
-	run_standard_simulation()
+	if stopped:
+		run_standard_simulation()
 
 
 func _on_Pooled_pressed():
-	run_pooled_simulation()
+	if stopped:
+		run_pooled_simulation()
 
 func _on_Charity_pressed():
-	run_standard_simulation(true)
+	if stopped:
+		run_standard_simulation(true)
 
 func _on_Reset_Stats_pressed():
 	initialize()
@@ -439,3 +454,6 @@ func _on_WasteAmpEdit_value_changed(value):
 
 func _on_RealAmpEdit_value_changed(value):
 	realism_amplifier = float(value / 100)
+
+func _on_Button_pressed():
+	clear_results()

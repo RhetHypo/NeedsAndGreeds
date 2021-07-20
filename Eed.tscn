@@ -4,8 +4,61 @@
 [ext_resource path="res://Eed.gd" type="Script" id=2]
 
 [node name="Eed" type="TextureRect"]
-modulate = Color( 1, 0, 0, 1 )
 margin_right = 64.0
 margin_bottom = 64.0
 texture = ExtResource( 1 )
 script = ExtResource( 2 )
+
+[node name="ColorRectType" type="ColorRect" parent="."]
+margin_right = 100.0
+margin_bottom = 20.0
+color = Color( 0.380392, 0.380392, 0.380392, 1 )
+
+[node name="CenterContainer" type="CenterContainer" parent="ColorRectType"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Label" type="Label" parent="ColorRectType/CenterContainer"]
+margin_left = 50.0
+margin_top = 3.0
+margin_right = 50.0
+margin_bottom = 17.0
+align = 1
+
+[node name="ColorRectNeed" type="ColorRect" parent="."]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_top = -30.0
+margin_right = 30.0
+color = Color( 0.839216, 0.145098, 0.145098, 1 )
+
+[node name="CenterContainer" type="CenterContainer" parent="ColorRectNeed"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Label" type="Label" parent="ColorRectNeed/CenterContainer"]
+margin_left = 15.0
+margin_top = 8.0
+margin_right = 15.0
+margin_bottom = 22.0
+align = 1
+
+[node name="ColorRectGreed" type="ColorRect" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -30.0
+margin_top = -30.0
+color = Color( 0.0901961, 0.792157, 0.101961, 1 )
+
+[node name="CenterContainer" type="CenterContainer" parent="ColorRectGreed"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Label" type="Label" parent="ColorRectGreed/CenterContainer"]
+margin_left = 15.0
+margin_top = 8.0
+margin_right = 15.0
+margin_bottom = 22.0
+align = 1

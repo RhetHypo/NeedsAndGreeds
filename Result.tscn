@@ -1,7 +1,24 @@
 [gd_scene format=2]
 
-[node name="Result" type="Label"]
-margin_right = 40.0
+[node name="ColorRect" type="ColorRect"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_right = -924.0
+margin_bottom = -570.0
+rect_min_size = Vector2( 100, 30 )
+color = Color( 0, 0, 0, 1 )
+
+[node name="Ratio" type="ProgressBar" parent="."]
+anchor_right = 1.0
 margin_bottom = 14.0
+
+[node name="Result" type="Label" parent="."]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -49.0
+margin_top = -15.0
+margin_right = 50.0
 text = "TESTABC"
-percent_visible = 14.2857
+align = 1

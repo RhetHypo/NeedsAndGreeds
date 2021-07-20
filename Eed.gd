@@ -9,12 +9,26 @@ export var type = "None"
 
 var rng = RandomNumberGenerator.new()
 
+onready var greedDisplay = get_node("ColorRectGreed/CenterContainer/Label")
+onready var needDisplay = get_node("ColorRectNeed/CenterContainer/Label")
+onready var typeDisplay = get_node("ColorRectType/CenterContainer/Label")
+
 var status = STATUS.ALIVE
 
 enum STATUS {ALIVE, DEAD}
 
 func _ready():
 	rng.randomize()
+	var tempGreed = 0
+	var tempNeed = 0
+	for greed in greeds:
+		tempGreed += greed
+	for need in needs:
+		tempNeed += need
+	greedDisplay.text = str(tempGreed)
+	needDisplay.text = str(tempNeed)
+	typeDisplay.text = type
+	
 
 func init(set_need, set_greed, set_type):
 	needs = set_need.duplicate()

@@ -313,8 +313,10 @@ func results(i, final=0):
 			newResult.get_node("Result").text = "Crashes: " + str(total_crashes)
 			newResult.get_node("Ratio").value = ratio
 		elif run_mode == MODE.APOCALYPSE:
-			newResult.get_node("Result").text = "TURNS: " + str(i)
-			newResult.get_node("Ratio").value = ratio
+			newResult.get_node("Apoc").visible = true
+			newResult.get_node("Apoc").text = "TURNS: " + str(i)
+			newResult.get_node("Result").text = "Crashes: " + str(total_crashes)
+			newResult.get_node("Ratio").visible = false
 		elif run_mode == MODE.UTOPIA:
 			newResult.get_node("Result").text = "Everything is fine."
 			newResult.get_node("Ratio").value = ratio

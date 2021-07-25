@@ -12,6 +12,7 @@ export var rich = 10
 export var spec = 10
 export var slow = false
 export var realism = true#need is increased to be a percentage of greed, a.k.a. you need to spend money to make money
+export var batch = false
 export var realism_amplifier = .50
 export var need_amplifier = 5
 export var greed_amplifier = 5
@@ -39,11 +40,15 @@ onready var results = get_node("VBoxContainer/CenterContainer/VBoxContainer")
 onready var variables = get_node("VBoxContainer/Variables")
 onready var amplifiers = get_node("AmpifiersSection/Amplifiers")
 onready var survivors = get_node("VBoxContainer/CenterContainer/VBoxContainer/Survivors")
+onready var standardPastResultsLabel = get_node("VBoxContainer/CenterContainer/VBoxContainer/PastResultsLabel/Standard")
+onready var pooledPastResultsLabel = get_node("VBoxContainer/CenterContainer/VBoxContainer/PastResultsLabel/Pooled")
+onready var charityPastResultsLabel = get_node("VBoxContainer/CenterContainer/VBoxContainer/PastResultsLabel/Charity")
 onready var standardPastResults = get_node("VBoxContainer/CenterContainer/VBoxContainer/PastResults/Standard")
 onready var pooledPastResults = get_node("VBoxContainer/CenterContainer/VBoxContainer/PastResults/Pooled")
 onready var charityPastResults = get_node("VBoxContainer/CenterContainer/VBoxContainer/PastResults/Charity")
 
 signal next_turn
+signal sim_complete
 
 var initial_state
 var stopped = true
@@ -164,7 +169,7 @@ func run_standard_simulation(give_charity = false):
 			for j in range(0,diversity):
 				bank[j] -= child.buy(j,prices[j],bank[j])
 			if give_charity and child.money > 0:#TODO: IMPLEMENT PEOPLE TAKING FROM CHARITY WHEN NEEDED
-				var temp_donation = child.money * float(float(100-waste_amplifier)/100)
+				var temp_donation = child.money * float(float(100-waste_amplifier)/100) * float(charity/100)
 				donations = temp_donation
 				child.money = child.money - temp_donation
 			for j in range(0,diversity):#if below threshold, check charity
@@ -203,6 +208,7 @@ func run_standard_simulation(give_charity = false):
 		else:
 			results(turns+1+extra_turns,1)
 	stopped = true
+	emit_signal("sim_complete")
 
 func run_pooled_simulation():
 	reset()
@@ -212,17 +218,17 @@ func run_pooled_simulation():
 			break
 		else:
 			yield(self,"next_turn")
-		for j in range(0,diversity):#tax phase
-			for child in grid.get_children():
-				if child.status == STATUS.ALIVE:
-					var checkCrash = rng.randi_range(0, 100)
-					if crash <= checkCrash:
+		for child in grid.get_children():#tax phase
+			var checkCrash = rng.randi_range(0, 100)
+			if crash <= checkCrash:
+				for j in range(0,diversity):#tax phase
+					if child.status == STATUS.ALIVE:
 						var tax = child.tax(j,volatility)
 						if realism:#apply waste
 							tax = int(tax * float(100-waste_amplifier)/100)
 						bank[j] = bank[j] + tax
-					else:
-						total_crashes += 1
+			else:
+				total_crashes += 1
 			#results(i + 1)
 		for j in range(0,diversity):#stimulus phase
 			for child in grid.get_children():
@@ -266,6 +272,7 @@ func run_pooled_simulation():
 			results(turns+1+extra_turns)
 		results(turns+1+extra_turns,2)
 	stopped = true
+	emit_signal("sim_complete")
 
 func results(i, final=0):
 	var alive = []
@@ -320,7 +327,10 @@ func results(i, final=0):
 		elif run_mode == MODE.UTOPIA:
 			newResult.get_node("Result").text = "Everything is fine."
 			newResult.get_node("Ratio").value = ratio
-			
+		standardPastResultsLabel.text = "Standard (" + str(getAverageResults(standardPastResults.get_children())) + ")"
+		pooledPastResultsLabel.text = "Pooled (" + str(getAverageResults(pooledPastResults.get_children())) + ")"
+		charityPastResultsLabel.text = "Charity (" + str(getAverageResults(charityPastResults.get_children())) + ")"
+		
 func instance_eed(need, greed, type):
 	var newEed = EED.instance()
 	newEed.init(need,greed,type)
@@ -366,7 +376,7 @@ func formatEedGrid():
 	if grid.get_child_count() > 0:
 		var eed_width = grid.get_child(0).rect_size.x
 		var grid_width = grid.get_parent().rect_size.x
-		grid.columns = grid_width/eed_width
+		grid.columns = (grid_width/eed_width) - 1
 func clear_results():
 	for child in standardPastResults.get_children():
 		standardPastResults.remove_child(child)
@@ -435,6 +445,12 @@ func _on_SpecEdit_value_changed(value):
 func _on_CheckBox_toggled(button_pressed):
 	slow = button_pressed
 
+func _on_BatchEdit_toggled(button_pressed):
+	batch = button_pressed
+	if !batch:
+		get_node("TurnTimer").wait_time = 0.05
+	else:
+		get_node("TurnTimer").wait_time = 0.01
 
 func _on_RealismEdit_toggled(button_pressed):
 	realism = button_pressed
@@ -483,3 +499,23 @@ func _on_RealAmpEdit_value_changed(value):
 
 func _on_Button_pressed():
 	clear_results()
+
+func _on_RunHundred_pressed():
+	for i in range(0,5):
+		run_standard_simulation()
+		yield(self,"sim_complete")
+		run_pooled_simulation()
+		yield(self,"sim_complete")
+		run_standard_simulation(true)
+		yield(self,"sim_complete")
+		get_node("MarginContainer/CenterContainer/HBoxContainer/BatchLabel").text = "Batch status: " + str(i+1)
+
+func getAverageResults(pastResults):
+	var total = 0
+	if pastResults.size() == 0:
+		return 0
+	for result in pastResults:
+		total += result.get_node("Ratio").value
+	return int(total/pastResults.size())
+
+

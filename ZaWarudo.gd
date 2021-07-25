@@ -3,16 +3,16 @@ extends GridContainer
 enum STATUS {ALIVE, DEAD}
 enum MODE {NORMAL, UTOPIA, APOCALYPSE}
 
-export var population = 30
-export var turns = 20
+export var population = 150
+export var turns = 25
 export var volatility = 10
 export var deviation = 10
-export var poor = 10
-export var rich = 10
-export var spec = 10
+export var poor = 0
+export var rich = 0
+export var spec = 0
 export var slow = false
 export var realism = true#need is increased to be a percentage of greed, a.k.a. you need to spend money to make money
-export var batch = false
+export var batch = true
 export var realism_amplifier = .50
 export var need_amplifier = 5
 export var greed_amplifier = 5
@@ -68,6 +68,7 @@ func _ready():
 	variables.get_node("CharityEdit").value = charity
 	variables.get_node("SlowEdit").pressed = slow
 	variables.get_node("RealismEdit").pressed = realism
+	variables.get_node("BatchEdit").pressed = batch
 	amplifiers.get_node("GreedAmpEdit").value = greed_amplifier
 	amplifiers.get_node("NeedAmpEdit").value = need_amplifier
 	amplifiers.get_node("SpecAmpEdit").value = spec_amplifier
@@ -501,14 +502,15 @@ func _on_Button_pressed():
 	clear_results()
 
 func _on_RunHundred_pressed():
-	for i in range(0,5):
-		run_standard_simulation()
-		yield(self,"sim_complete")
-		run_pooled_simulation()
-		yield(self,"sim_complete")
-		run_standard_simulation(true)
-		yield(self,"sim_complete")
-		get_node("MarginContainer/CenterContainer/HBoxContainer/BatchLabel").text = "Batch status: " + str(i+1)
+	if stopped:
+		for i in range(0,100):
+			run_standard_simulation()
+			yield(self,"sim_complete")
+			run_pooled_simulation()
+			yield(self,"sim_complete")
+			run_standard_simulation(true)
+			yield(self,"sim_complete")
+			get_node("MarginContainer/CenterContainer/HBoxContainer/BatchLabel").text = "Batch status: " + str(i+1)
 
 func getAverageResults(pastResults):
 	var total = 0

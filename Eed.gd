@@ -5,7 +5,8 @@ export var greeds = []
 export var balances = []
 export var money = 0
 #export var volatility = 1
-export var type = "None"
+export var g_type = "None"
+export var n_type = "None"
 
 var rng = RandomNumberGenerator.new()
 
@@ -27,18 +28,19 @@ func _ready():
 		tempNeed += need
 	greedDisplay.text = str(tempGreed)
 	needDisplay.text = str(tempNeed)
-	typeDisplay.text = type
+	typeDisplay.text = str(n_type) + " " + str(g_type)
 	
 
-func init(set_need, set_greed, set_type):
+func init(set_need, set_greed, set_g_type, set_n_type):
 	needs = set_need.duplicate()
 	greeds = set_greed.duplicate()
 	money = 0
 	balances = set_need.duplicate()#not sure why I can't just loop by size and append
 	for i in range(0,balances.size()):
 		balances[i] = 0
-	type = set_type
-	hint_tooltip = "Type: " + type + ", Need: " + str(needs) + ", Greed: " + str(greeds) + ", Current: " + str(balances) + ", Money: " + str(money)
+	g_type = set_g_type
+	n_type = set_n_type
+	hint_tooltip = "Need: " + str(needs) + ", Greed: " + str(greeds) + ", Current: " + str(balances) + ", Money: " + str(money)
 	set_status(STATUS.ALIVE)
 
 func work(volatility = 0):
@@ -102,7 +104,7 @@ func survive():
 	if self.status != STATUS.DEAD:
 		for i in range(0,needs.size()):
 			balances[i] = balances[i] - needs[i]
-			hint_tooltip = "Type: " + type + ", Need: " + str(needs) + ", Greed: " + str(greeds) + ", Current: " + str(balances) + ", Money: " + str(money)
+			hint_tooltip = "Need: " + str(needs) + ", Greed: " + str(greeds) + ", Current: " + str(balances) + ", Money: " + str(money)
 			if balances[i] < 0:
 				balances[i] = 0
 				self.set_status(STATUS.DEAD)

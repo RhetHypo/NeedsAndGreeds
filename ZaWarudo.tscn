@@ -15,22 +15,23 @@ wait_time = 0.05
 autostart = true
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-margin_right = 656.0
-margin_bottom = 70.0
+margin_right = 642.0
+margin_bottom = 126.0
 size_flags_horizontal = 3
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="CenterContainer" type="CenterContainer" parent="MarginContainer"]
-margin_right = 656.0
-margin_bottom = 70.0
+editor/display_folded = true
+margin_right = 642.0
+margin_bottom = 126.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/CenterContainer"]
-margin_left = 38.0
-margin_top = 25.0
-margin_right = 618.0
-margin_bottom = 45.0
+margin_left = 31.0
+margin_top = 53.0
+margin_right = 611.0
+margin_bottom = 73.0
 
 [node name="Reset" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
 margin_right = 48.0
@@ -87,139 +88,167 @@ margin_right = 580.0
 margin_bottom = 17.0
 
 [node name="AmpifiersSection" type="VBoxContainer" parent="."]
-margin_left = 660.0
+margin_left = 646.0
 margin_right = 1024.0
-margin_bottom = 70.0
+margin_bottom = 126.0
 
 [node name="AmplifiersLabel" type="Label" parent="AmpifiersSection"]
-margin_right = 364.0
+margin_right = 378.0
 margin_bottom = 14.0
 text = "Amplifiers"
 align = 1
 
 [node name="Amplifiers" type="GridContainer" parent="AmpifiersSection"]
 margin_top = 18.0
-margin_right = 364.0
-margin_bottom = 70.0
+margin_right = 378.0
+margin_bottom = 126.0
 grow_horizontal = 0
 rect_min_size = Vector2( 350, 0 )
 columns = 4
 
 [node name="NeedAmpLabel" type="Label" parent="AmpifiersSection/Amplifiers"]
-visible = false
 margin_top = 5.0
-margin_right = 68.0
+margin_right = 82.0
 margin_bottom = 19.0
-text = "Need(WIP)"
+text = "Need"
+align = 2
 
 [node name="NeedAmpEdit" type="SpinBox" parent="AmpifiersSection/Amplifiers"]
-visible = false
-margin_right = 74.0
+margin_left = 86.0
+margin_right = 186.0
 margin_bottom = 24.0
 
-[node name="GreedAmpLabel" type="Label" parent="AmpifiersSection/Amplifiers"]
+[node name="FrugAmpLabel" type="Label" parent="AmpifiersSection/Amplifiers"]
+margin_left = 190.0
 margin_top = 5.0
-margin_right = 76.0
+margin_right = 274.0
 margin_bottom = 19.0
+text = "Max Frugality"
+align = 2
+
+[node name="FrugAmpEdit" type="SpinBox" parent="AmpifiersSection/Amplifiers"]
+margin_left = 278.0
+margin_right = 378.0
+margin_bottom = 24.0
+
+[node name="LibAmpLabel" type="Label" parent="AmpifiersSection/Amplifiers"]
+margin_top = 33.0
+margin_right = 82.0
+margin_bottom = 47.0
+text = "Min Frugality"
+align = 2
+
+[node name="LibAmpEdit" type="SpinBox" parent="AmpifiersSection/Amplifiers"]
+margin_left = 86.0
+margin_top = 28.0
+margin_right = 186.0
+margin_bottom = 52.0
+
+[node name="GreedAmpLabel" type="Label" parent="AmpifiersSection/Amplifiers"]
+margin_left = 190.0
+margin_top = 33.0
+margin_right = 274.0
+margin_bottom = 47.0
 rect_min_size = Vector2( 75, 0 )
 text = "Greed"
 align = 2
 
 [node name="GreedAmpEdit" type="SpinBox" parent="AmpifiersSection/Amplifiers"]
-margin_left = 80.0
-margin_right = 180.0
-margin_bottom = 24.0
+margin_left = 278.0
+margin_top = 28.0
+margin_right = 378.0
+margin_bottom = 52.0
 rect_min_size = Vector2( 100, 0 )
 
 [node name="SpecAmpLabel" type="Label" parent="AmpifiersSection/Amplifiers"]
-margin_left = 184.0
-margin_top = 5.0
-margin_right = 260.0
-margin_bottom = 19.0
+margin_top = 61.0
+margin_right = 82.0
+margin_bottom = 75.0
 rect_min_size = Vector2( 75, 0 )
 text = "Spec"
 align = 2
 
 [node name="SpecAmpEdit" type="SpinBox" parent="AmpifiersSection/Amplifiers"]
-margin_left = 264.0
-margin_right = 364.0
-margin_bottom = 24.0
+margin_left = 86.0
+margin_top = 56.0
+margin_right = 186.0
+margin_bottom = 80.0
 rect_min_size = Vector2( 100, 0 )
 size_flags_horizontal = 3
 
 [node name="WasteAmpLabel" type="Label" parent="AmpifiersSection/Amplifiers"]
-margin_top = 33.0
-margin_right = 76.0
-margin_bottom = 47.0
+margin_left = 190.0
+margin_top = 61.0
+margin_right = 274.0
+margin_bottom = 75.0
 size_flags_horizontal = 3
 text = "Waste%"
 align = 2
 
 [node name="WasteAmpEdit" type="SpinBox" parent="AmpifiersSection/Amplifiers"]
-margin_left = 80.0
-margin_top = 28.0
-margin_right = 180.0
-margin_bottom = 52.0
+margin_left = 278.0
+margin_top = 56.0
+margin_right = 378.0
+margin_bottom = 80.0
 size_flags_horizontal = 3
 
 [node name="RealAmpLabel" type="Label" parent="AmpifiersSection/Amplifiers"]
-margin_left = 184.0
-margin_top = 33.0
-margin_right = 260.0
-margin_bottom = 47.0
+margin_top = 89.0
+margin_right = 82.0
+margin_bottom = 103.0
 size_flags_horizontal = 3
 text = "Realism%"
 align = 2
 
 [node name="RealAmpEdit" type="SpinBox" parent="AmpifiersSection/Amplifiers"]
-margin_left = 264.0
-margin_top = 28.0
-margin_right = 364.0
-margin_bottom = 52.0
+margin_left = 86.0
+margin_top = 84.0
+margin_right = 186.0
+margin_bottom = 108.0
 size_flags_horizontal = 3
 
 [node name="InnerWarudo" type="ScrollContainer" parent="."]
-margin_top = 74.0
-margin_right = 656.0
+margin_top = 130.0
+margin_right = 642.0
 margin_bottom = 600.0
 size_flags_vertical = 3
 
 [node name="GridContainer" type="GridContainer" parent="InnerWarudo"]
-margin_right = 656.0
-margin_bottom = 526.0
+margin_right = 642.0
+margin_bottom = 470.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 custom_constants/vseparation = 10
 custom_constants/hseparation = 10
 
 [node name="VBoxContainer" type="VBoxContainer" parent="."]
-margin_left = 660.0
-margin_top = 74.0
+margin_left = 646.0
+margin_top = 130.0
 margin_right = 1024.0
 margin_bottom = 600.0
 
 [node name="VariablesLabel" type="Label" parent="VBoxContainer"]
-margin_right = 364.0
+margin_right = 378.0
 margin_bottom = 14.0
 text = "Variables"
 align = 1
 
 [node name="Variables" type="GridContainer" parent="VBoxContainer"]
 margin_top = 18.0
-margin_right = 364.0
+margin_right = 378.0
 margin_bottom = 270.0
 rect_min_size = Vector2( 350, 0 )
 columns = 4
 
-[node name="PopLabel" type="Label" parent="VBoxContainer/Variables"]
+[node name="StanLabel" type="Label" parent="VBoxContainer/Variables"]
 margin_top = 5.0
 margin_right = 75.0
 margin_bottom = 19.0
 rect_min_size = Vector2( 75, 0 )
-text = "Population"
+text = "Standard"
 align = 2
 
-[node name="PopEdit" type="SpinBox" parent="VBoxContainer/Variables"]
+[node name="StanEdit" type="SpinBox" parent="VBoxContainer/Variables"]
 margin_left = 79.0
 margin_right = 180.0
 margin_bottom = 24.0
@@ -254,6 +283,7 @@ margin_top = 28.0
 margin_right = 180.0
 margin_bottom = 52.0
 rect_min_size = Vector2( 75, 0 )
+max_value = 10000.0
 
 [node name="VolLabel" type="Label" parent="VBoxContainer/Variables"]
 margin_left = 184.0
@@ -283,6 +313,7 @@ margin_top = 56.0
 margin_right = 180.0
 margin_bottom = 80.0
 rect_min_size = Vector2( 75, 0 )
+max_value = 10000.0
 
 [node name="DeviLabel" type="Label" parent="VBoxContainer/Variables"]
 margin_left = 184.0
@@ -310,6 +341,7 @@ margin_left = 79.0
 margin_top = 84.0
 margin_right = 180.0
 margin_bottom = 108.0
+max_value = 10000.0
 
 [node name="DiveLabel" type="Label" parent="VBoxContainer/Variables"]
 margin_left = 184.0
@@ -439,19 +471,19 @@ text = "Clear Results"
 
 [node name="CenterContainer" type="ScrollContainer" parent="VBoxContainer"]
 margin_top = 274.0
-margin_right = 364.0
-margin_bottom = 526.0
+margin_right = 378.0
+margin_bottom = 470.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/CenterContainer"]
-margin_right = 364.0
+margin_right = 378.0
 margin_bottom = 144.0
 rect_min_size = Vector2( 200, 0 )
 size_flags_horizontal = 3
 
 [node name="TurnsLabel" type="Label" parent="VBoxContainer/CenterContainer/VBoxContainer"]
-margin_right = 364.0
+margin_right = 378.0
 margin_bottom = 14.0
 size_flags_vertical = 2
 text = "TURN: 0"
@@ -459,42 +491,42 @@ autowrap = true
 
 [node name="PopLabel" type="Label" parent="VBoxContainer/CenterContainer/VBoxContainer"]
 margin_top = 18.0
-margin_right = 364.0
+margin_right = 378.0
 margin_bottom = 32.0
 text = "ALIVE: 0 DEAD: 0"
 autowrap = true
 
 [node name="BankLabel" type="Label" parent="VBoxContainer/CenterContainer/VBoxContainer"]
 margin_top = 36.0
-margin_right = 364.0
+margin_right = 378.0
 margin_bottom = 50.0
 text = "BANK: []"
 autowrap = true
 
 [node name="PriceLabel" type="Label" parent="VBoxContainer/CenterContainer/VBoxContainer"]
 margin_top = 54.0
-margin_right = 364.0
+margin_right = 378.0
 margin_bottom = 68.0
 text = "PRICES: []"
 autowrap = true
 
 [node name="TotalNeeds" type="Label" parent="VBoxContainer/CenterContainer/VBoxContainer"]
 margin_top = 72.0
-margin_right = 364.0
+margin_right = 378.0
 margin_bottom = 86.0
 text = "TOTAL NEEDS: []"
 autowrap = true
 
 [node name="TotalGreeds" type="Label" parent="VBoxContainer/CenterContainer/VBoxContainer"]
 margin_top = 90.0
-margin_right = 364.0
+margin_right = 378.0
 margin_bottom = 104.0
 text = "TOTAL GREEDS: []"
 autowrap = true
 
 [node name="Survivors" type="HBoxContainer" parent="VBoxContainer/CenterContainer/VBoxContainer"]
 margin_top = 108.0
-margin_right = 364.0
+margin_right = 378.0
 margin_bottom = 122.0
 
 [node name="Alive" type="Label" parent="VBoxContainer/CenterContainer/VBoxContainer/Survivors"]
@@ -504,39 +536,39 @@ text = "Alive:"
 
 [node name="Ratio" type="ProgressBar" parent="VBoxContainer/CenterContainer/VBoxContainer/Survivors"]
 margin_left = 40.0
-margin_right = 323.0
+margin_right = 337.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 
 [node name="Dead" type="Label" parent="VBoxContainer/CenterContainer/VBoxContainer/Survivors"]
-margin_left = 327.0
-margin_right = 364.0
+margin_left = 341.0
+margin_right = 378.0
 margin_bottom = 14.0
 text = "Dead:"
 
 [node name="PastResultsLabel" type="HBoxContainer" parent="VBoxContainer/CenterContainer/VBoxContainer"]
 margin_top = 126.0
-margin_right = 364.0
+margin_right = 378.0
 margin_bottom = 140.0
 
 [node name="Standard" type="Label" parent="VBoxContainer/CenterContainer/VBoxContainer/PastResultsLabel"]
-margin_right = 118.0
+margin_right = 123.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 text = "Standard"
 align = 1
 
 [node name="Pooled" type="Label" parent="VBoxContainer/CenterContainer/VBoxContainer/PastResultsLabel"]
-margin_left = 122.0
-margin_right = 240.0
+margin_left = 127.0
+margin_right = 250.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 text = "Pooled"
 align = 1
 
 [node name="Charity" type="Label" parent="VBoxContainer/CenterContainer/VBoxContainer/PastResultsLabel"]
-margin_left = 244.0
-margin_right = 364.0
+margin_left = 254.0
+margin_right = 378.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 text = "Charity"
@@ -544,26 +576,26 @@ align = 1
 
 [node name="PastResults" type="HBoxContainer" parent="VBoxContainer/CenterContainer/VBoxContainer"]
 margin_top = 144.0
-margin_right = 364.0
+margin_right = 378.0
 margin_bottom = 144.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 1
 
 [node name="Standard" type="VBoxContainer" parent="VBoxContainer/CenterContainer/VBoxContainer/PastResults"]
-margin_right = 118.0
+margin_right = 123.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Pooled" type="VBoxContainer" parent="VBoxContainer/CenterContainer/VBoxContainer/PastResults"]
-margin_left = 122.0
-margin_right = 240.0
+margin_left = 127.0
+margin_right = 250.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Charity" type="VBoxContainer" parent="VBoxContainer/CenterContainer/VBoxContainer/PastResults"]
-margin_left = 244.0
-margin_right = 364.0
+margin_left = 254.0
+margin_right = 378.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 [connection signal="timeout" from="TurnTimer" to="." method="_on_TurnTimer_timeout"]
@@ -576,12 +608,14 @@ size_flags_vertical = 3
 [connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Stop" to="." method="_on_Stop_pressed"]
 [connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/RunHundred" to="." method="_on_RunHundred_pressed"]
 [connection signal="value_changed" from="AmpifiersSection/Amplifiers/NeedAmpEdit" to="." method="_on_NeedAmpEdit_value_changed"]
+[connection signal="value_changed" from="AmpifiersSection/Amplifiers/FrugAmpEdit" to="." method="_on_FrugAmpEdit_value_changed"]
+[connection signal="value_changed" from="AmpifiersSection/Amplifiers/LibAmpEdit" to="." method="_on_LibAmpEdit_value_changed"]
 [connection signal="value_changed" from="AmpifiersSection/Amplifiers/GreedAmpEdit" to="." method="_on_GreedAmpEdit_value_changed"]
 [connection signal="value_changed" from="AmpifiersSection/Amplifiers/SpecAmpEdit" to="." method="_on_SpecAmpEdit_value_changed"]
 [connection signal="value_changed" from="AmpifiersSection/Amplifiers/WasteAmpEdit" to="." method="_on_WasteAmpEdit_value_changed"]
 [connection signal="value_changed" from="AmpifiersSection/Amplifiers/RealAmpEdit" to="." method="_on_RealAmpEdit_value_changed"]
 [connection signal="resized" from="InnerWarudo" to="." method="_on_InnerWarudo_resized"]
-[connection signal="value_changed" from="VBoxContainer/Variables/PopEdit" to="." method="_on_PopEdit_value_changed"]
+[connection signal="value_changed" from="VBoxContainer/Variables/StanEdit" to="." method="_on_StanEdit_value_changed"]
 [connection signal="value_changed" from="VBoxContainer/Variables/TurnsEdit" to="." method="_on_TurnsEdit_value_changed"]
 [connection signal="value_changed" from="VBoxContainer/Variables/PoorEdit" to="." method="_on_PoorEdit_value_changed"]
 [connection signal="value_changed" from="VBoxContainer/Variables/VolEdit" to="." method="_on_VolEdit_value_changed"]

@@ -2,14 +2,17 @@ extends GridContainer
 
 enum STATUS {ALIVE, DEAD}
 enum MODE {NORMAL, UTOPIA, APOCALYPSE}
+enum G_TYPE {Standard, Poor, Rich, Special}
+enum N_TYPE {Frugal, Normal, Liberal}
 
-export var population = 150
+#export var population = 150
 export var turns = 25
 export var volatility = 10
 export var deviation = 10
-export var poor = 0
-export var rich = 0
-export var spec = 0
+export var poor = 5
+export var rich = 5
+export var spec = 5
+export var stan = 5
 export var slow = false
 export var realism = true#need is increased to be a percentage of greed, a.k.a. you need to spend money to make money
 export var batch = true
@@ -18,6 +21,8 @@ export var need_amplifier = 5
 export var greed_amplifier = 5
 export var spec_amplifier = 5
 export var waste_amplifier = 10
+export var frugality = 75
+export var liberality = 25
 export var bank = []
 export var donations = 0
 export var prices = []
@@ -56,10 +61,10 @@ var stopped = true
 func _ready():
 	initialize()
 	results(0)
-	variables.get_node("PopEdit").value = population
 	variables.get_node("TurnsEdit").value = turns
 	variables.get_node("VolEdit").value = volatility
 	variables.get_node("DeviEdit").value = deviation
+	variables.get_node("StanEdit").value = stan
 	variables.get_node("PoorEdit").value = poor
 	variables.get_node("RichEdit").value = rich
 	variables.get_node("SpecEdit").value = spec
@@ -74,6 +79,8 @@ func _ready():
 	amplifiers.get_node("SpecAmpEdit").value = spec_amplifier
 	amplifiers.get_node("WasteAmpEdit").value = waste_amplifier
 	amplifiers.get_node("RealAmpEdit").value = realism_amplifier * 100
+	amplifiers.get_node("FrugAmpEdit").value = frugality
+	amplifiers.get_node("LibAmpEdit").value = liberality
 	match run_mode:
 		MODE.NORMAL:
 			variables.get_node("NormalButton").pressed = true
@@ -91,30 +98,42 @@ func initialize():
 	var curPoor = poor
 	var curRich = rich
 	var curSpec = spec
-	for i in range(population):
+	var curStan = stan
+	for i in range(getPopulation()):
 		var rand_spec = rng.randi_range(0, diversity)
-		var curType = "None"
+		var curGType = "None"
+		var curNType = "None"
 		var newNeeds = []
 		var newGreeds = []
 		if(curPoor > 0):
-			curType = "Poor"
+			curGType = G_TYPE.Poor
 			curPoor -= 1
+		elif(curStan > 0):
+			curGType = G_TYPE.Standard
+			curStan -= 1
 		elif(curSpec > 0):
-			curType = "Spec"
+			curGType = G_TYPE.Special
 			curSpec -= 1
 		elif(curRich > 0):
-			curType = "Rich"
+			curGType = G_TYPE.Rich
 			curRich -= 1
+		var need_chance = rng.randi_range(liberality,frugality)
+		if(need_chance < 30):#todo: Actually implement a weight, here
+			curNType = N_TYPE.Liberal
+		elif(need_chance < 60):
+			curNType = N_TYPE.Normal
+		else:
+			curNType = N_TYPE.Frugal
 		for j in range(0,diversity):
-			newNeeds.append(int(deviation/2)) #* int(need_amplifier)
+			#newNeeds.append(int(deviation/2)) #* int(need_amplifier)
 			#newGreeds.append(rng.randi_range(0, deviation))
-			if(curType == "Poor"):
+			if(curGType == G_TYPE.Poor):
 				#newGreeds[j] = int(newGreeds[j]/greed_amplifier)
 				newGreeds.append(rng.randi_range(0, int(deviation/greed_amplifier)))
-			elif(curType == "Rich"):
+			elif(curGType == G_TYPE.Rich):
 				#newGreeds[j] = int((newGreeds[j]+1)*greed_amplifier)
 				newGreeds.append(rng.randi_range(int(deviation), int(deviation*greed_amplifier)))
-			elif(curType == "Spec"):
+			elif(curGType == G_TYPE.Special):
 				if j == rand_spec:
 					#newGreeds[j] = int((newGreeds[j]+1)*greed_amplifier*spec_amplifier)
 					newGreeds.append(rng.randi_range(int(deviation), int(deviation*greed_amplifier*spec_amplifier)))
@@ -123,7 +142,13 @@ func initialize():
 					newGreeds.append(rng.randi_range(0, int(deviation/greed_amplifier)))
 			else:
 				#newGreeds[j] = int((newGreeds[j]+1))
-				newGreeds.append(rng.randi_range(int(deviation/greed_amplifier), int(deviation*greed_amplifier)))
+				newGreeds.append(rng.randi_range(int(deviation/greed_amplifier), int(deviation*greed_amplifier*2)))#really unsure if we need a ceiling variable
+			if(curNType) == N_TYPE.Frugal:
+				newNeeds.append(rng.randi_range(0, int(deviation/need_amplifier)))
+			elif(curNType) == N_TYPE.Normal:
+				newNeeds.append(rng.randi_range(int(deviation/need_amplifier), int(deviation*need_amplifier)))
+			else:
+				newNeeds.append(rng.randi_range(int(deviation), int(deviation*need_amplifier*2)))
 		if(realism):
 			var totalGreed = 0
 			for k in range(0,diversity):
@@ -131,7 +156,7 @@ func initialize():
 			for l in range(0,diversity):
 				if(newNeeds[l] < int(int(totalGreed * realism_amplifier)/diversity)):
 					newNeeds[l] = int(int(totalGreed * realism_amplifier)/diversity)
-		instance_eed(newNeeds,newGreeds,curType)
+		instance_eed(newNeeds,newGreeds,G_TYPE.keys()[curGType],N_TYPE.keys()[curNType])
 	for j in range(0,diversity):
 		bank.append(0)
 	initial_state = grid.get_children().duplicate()
@@ -193,7 +218,7 @@ func run_standard_simulation(give_charity = false):
 			results(turns,1)
 	else:
 		var extra_turns = 0
-		while temp_dead.size() < population:
+		while temp_dead.size() < getPopulation():
 			for child in grid.get_children():#buy/survive phase
 				for j in range(0,diversity):
 					bank[j] -= child.buy(j,prices[j],bank[j])
@@ -253,7 +278,7 @@ func run_pooled_simulation():
 		results(turns,2)
 	else:
 		var extra_turns = 0
-		while temp_dead.size() < population:
+		while temp_dead.size() < getPopulation():
 			for j in range(0,diversity):#stimulus phase
 				for child in grid.get_children():
 					if bank[j] > child.needs[j] and child.status == STATUS.ALIVE:
@@ -332,9 +357,9 @@ func results(i, final=0):
 		pooledPastResultsLabel.text = "Pooled (" + str(getAverageResults(pooledPastResults.get_children())) + ")"
 		charityPastResultsLabel.text = "Charity (" + str(getAverageResults(charityPastResults.get_children())) + ")"
 		
-func instance_eed(need, greed, type):
+func instance_eed(need, greed, g_type, n_type):
 	var newEed = EED.instance()
-	newEed.init(need,greed,type)
+	newEed.init(need,greed,g_type,n_type)
 	grid.add_child(newEed)
 
 func reset():
@@ -343,7 +368,7 @@ func reset():
 	yield(self,"next_turn")
 	var current_children = grid.get_children()
 	for child in initial_state:
-		current_children[child.get_index()].init(child.needs,child.greeds,child.type)
+		current_children[child.get_index()].init(child.needs,child.greeds,child.g_type,child.n_type)
 	bank = []
 	for j in range(0,diversity):
 		bank.append(0)
@@ -372,6 +397,9 @@ func calc_gpd():
 				gdp[i] += child.greeds[i]
 			for i in child.needs.size():
 				gdp_cost[i] += child.needs[i]
+
+func getPopulation():
+	return spec + poor + rich + stan
 
 func formatEedGrid():
 	if grid.get_child_count() > 0:
@@ -422,8 +450,8 @@ func _on_Pause_pressed():
 func _on_Stop_pressed():
 	stopped = true
 
-func _on_PopEdit_value_changed(value):
-	population = value
+func _on_StanEdit_value_changed(value):
+	stan = value
 
 
 func _on_TurnsEdit_value_changed(value):
@@ -521,3 +549,11 @@ func getAverageResults(pastResults):
 	return int(total/pastResults.size())
 
 
+
+
+func _on_FrugAmpEdit_value_changed(value):
+	frugality = value
+
+
+func _on_LibAmpEdit_value_changed(value):
+	liberality = value

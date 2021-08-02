@@ -92,7 +92,7 @@ func _ready():
 func initialize():
 	for child in grid.get_children():
 		grid.remove_child(child)
-	clear_results()
+	#clear_results()
 	rng.randomize()
 	grid.columns = 10
 	var curPoor = poor
@@ -353,6 +353,7 @@ func results(i, final=0):
 		elif run_mode == MODE.UTOPIA:
 			newResult.get_node("Result").text = "Everything is fine."
 			newResult.get_node("Ratio").value = ratio
+		newResult.hint_tooltip = parametersHint()
 		standardPastResultsLabel.text = "Standard (" + str(getAverageResults(standardPastResults.get_children())) + ")"
 		pooledPastResultsLabel.text = "Pooled (" + str(getAverageResults(pooledPastResults.get_children())) + ")"
 		charityPastResultsLabel.text = "Charity (" + str(getAverageResults(charityPastResults.get_children())) + ")"
@@ -401,11 +402,26 @@ func calc_gpd():
 func getPopulation():
 	return spec + poor + rich + stan
 
+func parametersHint():
+	var returnValue = "Turns: " + str(turns) + " Volatility: " + str(volatility) + "\n"
+	returnValue += "Deviation: " + str(deviation) + " Standard: " + str(stan) + "\n"
+	returnValue += "Poor: " + str(poor) + " Rich: " + str(rich) + "\n"
+	returnValue += "Special: " + str(spec) + " Diversity: " + str(diversity) + "\n"
+	returnValue += "Crash: " + str(crash) + " Charity: " + str(charity) + "\n"
+	returnValue += "Realism: " + str(realism) + " Greed Amp: " + str(greed_amplifier) + "\n"
+	returnValue += "Need Amp: " + str(need_amplifier) + " Spec Amp: " + str(spec_amplifier) + "\n"
+	returnValue += "Waste Amp: " + str(waste_amplifier) + " Realism Amp: " + str(realism_amplifier * 100) + "\n"
+	returnValue += "Frugal Amp: " + str(frugality) + " Liberal Amp: " + str(liberality)
+	#variables.get_node("SlowEdit").pressed = slow
+	#variables.get_node("BatchEdit").pressed = batch
+	return returnValue
+
 func formatEedGrid():
 	if grid.get_child_count() > 0:
 		var eed_width = grid.get_child(0).rect_size.x
 		var grid_width = grid.get_parent().rect_size.x
 		grid.columns = (grid_width/eed_width) - 1
+
 func clear_results():
 	for child in standardPastResults.get_children():
 		standardPastResults.remove_child(child)
@@ -415,7 +431,7 @@ func clear_results():
 		charityPastResults.remove_child(child)
 
 func _on_Reset_pressed():
-	reset()
+	clear_results()
 
 
 func _on_Standard_pressed():

@@ -23,68 +23,67 @@ __meta__ = {
 }
 
 [node name="CenterContainer" type="CenterContainer" parent="MarginContainer"]
-editor/display_folded = true
 margin_right = 642.0
 margin_bottom = 126.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/CenterContainer"]
-margin_left = 31.0
+margin_left = 5.0
 margin_top = 53.0
-margin_right = 611.0
+margin_right = 636.0
 margin_bottom = 73.0
 
-[node name="Reset" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
-margin_right = 48.0
-margin_bottom = 20.0
-text = "Reset"
-
 [node name="Standard" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
-margin_left = 52.0
-margin_right = 147.0
+margin_right = 95.0
 margin_bottom = 20.0
 text = "Run Standard"
 
 [node name="Pooled" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
-margin_left = 151.0
-margin_right = 235.0
+margin_left = 99.0
+margin_right = 183.0
 margin_bottom = 20.0
 text = "Run Pooled"
 
 [node name="Charity" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
-margin_left = 239.0
-margin_right = 323.0
+margin_left = 187.0
+margin_right = 271.0
 margin_bottom = 20.0
 text = "Run Charity"
 
+[node name="Reset Results" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
+margin_left = 275.0
+margin_right = 374.0
+margin_bottom = 20.0
+text = "Reset Results"
+
 [node name="Reset Stats" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
-margin_left = 327.0
-margin_right = 410.0
+margin_left = 378.0
+margin_right = 461.0
 margin_bottom = 20.0
 text = "Reset Stats"
 
 [node name="Pause" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
 pause_mode = 2
-margin_left = 414.0
-margin_right = 464.0
+margin_left = 465.0
+margin_right = 515.0
 margin_bottom = 20.0
 text = "Pause"
 
 [node name="Stop" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
-margin_left = 468.0
-margin_right = 508.0
+margin_left = 519.0
+margin_right = 559.0
 margin_bottom = 20.0
 text = "Stop"
 
 [node name="RunHundred" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
-margin_left = 512.0
-margin_right = 576.0
+margin_left = 563.0
+margin_right = 627.0
 margin_bottom = 20.0
 text = "Run 100"
 
 [node name="BatchLabel" type="Label" parent="MarginContainer/CenterContainer/HBoxContainer"]
-margin_left = 580.0
+margin_left = 631.0
 margin_top = 3.0
-margin_right = 580.0
+margin_right = 631.0
 margin_bottom = 17.0
 
 [node name="AmpifiersSection" type="VBoxContainer" parent="."]
@@ -599,10 +598,10 @@ margin_right = 378.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 [connection signal="timeout" from="TurnTimer" to="." method="_on_TurnTimer_timeout"]
-[connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Reset" to="." method="_on_Reset_pressed"]
 [connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Standard" to="." method="_on_Standard_pressed"]
 [connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Pooled" to="." method="_on_Pooled_pressed"]
 [connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Charity" to="." method="_on_Charity_pressed"]
+[connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Reset Results" to="." method="_on_Reset_pressed"]
 [connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Reset Stats" to="." method="_on_Reset_Stats_pressed"]
 [connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Pause" to="." method="_on_Pause_pressed"]
 [connection signal="pressed" from="MarginContainer/CenterContainer/HBoxContainer/Stop" to="." method="_on_Stop_pressed"]

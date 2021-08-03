@@ -57,8 +57,11 @@ signal sim_complete
 
 var initial_state
 var stopped = true
+var batch_stopped = true
 
 func _ready():
+	load_config()
+	#save_results()
 	initialize()
 	results(0)
 	variables.get_node("TurnsEdit").value = turns
@@ -416,6 +419,18 @@ func parametersHint():
 	#variables.get_node("BatchEdit").pressed = batch
 	return returnValue
 
+func parametersOneLine():
+	var returnValue = "Turns: " + str(turns) + " Volatility: " + str(volatility)
+	returnValue += " Deviation: " + str(deviation) + " Standard: " + str(stan)
+	returnValue += " Poor: " + str(poor) + " Rich: " + str(rich)
+	returnValue += " Special: " + str(spec) + " Diversity: " + str(diversity)
+	returnValue += " Crash: " + str(crash) + " Charity: " + str(charity)
+	returnValue += " Realism: " + str(realism) + " Greed Amp: " + str(greed_amplifier)
+	returnValue += " Need Amp: " + str(need_amplifier) + " Spec Amp: " + str(spec_amplifier)
+	returnValue += " Waste Amp: " + str(waste_amplifier) + " Realism Amp: " + str(realism_amplifier * 100)
+	returnValue += " Frugal Amp: " + str(frugality) + " Liberal Amp: " + str(liberality)
+	return returnValue
+
 func formatEedGrid():
 	if grid.get_child_count() > 0:
 		var eed_width = grid.get_child(0).rect_size.x
@@ -464,7 +479,10 @@ func _on_Pause_pressed():
 
 
 func _on_Stop_pressed():
-	stopped = true
+	if(batch):
+		batch_stopped = true
+	else:
+		stopped = true
 
 func _on_StanEdit_value_changed(value):
 	stan = value
@@ -546,15 +564,36 @@ func _on_Button_pressed():
 	clear_results()
 
 func _on_RunHundred_pressed():
+	batch_stopped = false
 	if stopped:
-		for i in range(0,100):
-			run_standard_simulation()
-			yield(self,"sim_complete")
-			run_pooled_simulation()
-			yield(self,"sim_complete")
-			run_standard_simulation(true)
-			yield(self,"sim_complete")
+		for i in range(0,5):
+			if(!batch_stopped):
+				run_standard_simulation()
+				yield(self,"sim_complete")
+			if(!batch_stopped):
+				run_pooled_simulation()
+				yield(self,"sim_complete")
+			if(!batch_stopped):
+				run_standard_simulation(true)
+				yield(self,"sim_complete")
 			get_node("MarginContainer/CenterContainer/HBoxContainer/BatchLabel").text = "Batch status: " + str(i+1)
+			initialize()
+		diversity = 5
+		variables.get_node("DiveEdit").value = diversity
+		initialize()
+		for i in range(0,5):
+			if(!batch_stopped):
+				run_standard_simulation()
+				yield(self,"sim_complete")
+			if(!batch_stopped):
+				run_pooled_simulation()
+				yield(self,"sim_complete")
+			if(!batch_stopped):
+				run_standard_simulation(true)
+				yield(self,"sim_complete")
+			get_node("MarginContainer/CenterContainer/HBoxContainer/BatchLabel").text = "Batch status: " + str(i+1)
+			initialize()
+	save_results()
 
 func getAverageResults(pastResults):
 	var total = 0
@@ -573,3 +612,35 @@ func _on_FrugAmpEdit_value_changed(value):
 
 func _on_LibAmpEdit_value_changed(value):
 	liberality = value
+	
+	
+func load_config():
+	var config = ConfigFile.new()
+	var err = config.load("settings.cfg")
+	if err == OK: # If not, something went wrong with the file loading
+	    # Look for the display/width pair, and default to 1024 if missing
+	    var screen_width = config.get_value("display", "width", 1024)
+	    # Store a variable if and only if it hasn't been defined yet
+	    if not config.has_section_key("audio", "mute"):
+	        config.set_value("audio", "mute", false)
+	    # Save the changes by overwriting the previous file
+	    config.save("settings.cfg")
+	print("Did config work? : ",config.get_value("test","some_key"))
+
+func save_results():
+	var save_game = File.new()
+	save_game.open("savegame.csv", File.WRITE)
+	save_game.store_line(save_structure())
+	save_game.close()
+
+func save_structure():
+	var curParams = ""#parametersOneLine()
+	var save_dict = "Standard, Pooled,,Starting Parameters"
+	for i in range(0,standardPastResults.get_child_count()):#kind ramshackle, but it works
+		save_dict += "\n" + str(standardPastResults.get_child(i).get_node("Ratio").value)
+		save_dict += "," + str(pooledPastResults.get_child(i).get_node("Ratio").value)
+		if standardPastResults.get_child(i).hint_tooltip.replace("\n"," ") != curParams:
+			curParams = standardPastResults.get_child(i).hint_tooltip.replace("\n"," ")
+			save_dict += ",," + curParams
+	#save_dict += "\n" + "Test 3, Test 4"
+	return save_dict

@@ -21,8 +21,8 @@ export var need_amplifier = 5
 export var greed_amplifier = 5
 export var spec_amplifier = 5
 export var waste_amplifier = 10
-export var frugality = 75
-export var liberality = 25
+export var frugality = 100
+export var liberality = 100
 export var bank = []
 export var donations = 0
 export var prices = []
@@ -58,6 +58,8 @@ signal sim_complete
 var initial_state
 var stopped = true
 var batch_stopped = true
+
+var config = ConfigFile.new()
 
 func _ready():
 	load_config()
@@ -565,35 +567,53 @@ func _on_Button_pressed():
 
 func _on_RunHundred_pressed():
 	batch_stopped = false
+	var original = ""
 	if stopped:
-		for i in range(0,5):
-			if(!batch_stopped):
-				run_standard_simulation()
-				yield(self,"sim_complete")
-			if(!batch_stopped):
-				run_pooled_simulation()
-				yield(self,"sim_complete")
-			if(!batch_stopped):
-				run_standard_simulation(true)
-				yield(self,"sim_complete")
-			get_node("MarginContainer/CenterContainer/HBoxContainer/BatchLabel").text = "Batch status: " + str(i+1)
-			initialize()
-		diversity = 5
-		variables.get_node("DiveEdit").value = diversity
-		initialize()
-		for i in range(0,5):
-			if(!batch_stopped):
-				run_standard_simulation()
-				yield(self,"sim_complete")
-			if(!batch_stopped):
-				run_pooled_simulation()
-				yield(self,"sim_complete")
-			if(!batch_stopped):
-				run_standard_simulation(true)
-				yield(self,"sim_complete")
-			get_node("MarginContainer/CenterContainer/HBoxContainer/BatchLabel").text = "Batch status: " + str(i+1)
-			initialize()
+		for type in config.get_value("batch","types"): 
+			var variance = config.get_value("batch",type)
+			for j in range(variance[0],variance[1]+variance[2],variance[2]):
+				set_batch_variable(type,j)
+				for i in range(0,config.get_value("batch","runs")):
+					if(!batch_stopped):
+						run_standard_simulation()
+						yield(self,"sim_complete")
+					else:
+						break
+					if(!batch_stopped):
+						run_pooled_simulation()
+						yield(self,"sim_complete")
+					else:
+						break
+					if(!batch_stopped):
+						run_standard_simulation(true)
+						yield(self,"sim_complete")
+					else:
+						break
+					get_node("MarginContainer/CenterContainer/HBoxContainer/BatchLabel").text = "Batch status: " + str(i+1)
+					initialize()
+#		diversity = 5
+#		variables.get_node("DiveEdit").value = diversity
+#		initialize()
+	get_node("MarginContainer/CenterContainer/HBoxContainer/BatchLabel").text = "Batch status: Complete"
 	save_results()
+	
+func set_batch_variable(type, value):
+	for type in config.get_value("batch","types"):
+		self.set(type, config.get_value("batch","orig_" + type))
+	#this is getting really out of hand, but should suffice
+	if type == "diversity":
+		diversity = value
+		variables.get_node("DiveEdit").value = diversity
+	elif type == "volatility":
+		volatility = value
+		variables.get_node("VolEdit").value = volatility
+	elif type == "frugality":
+		frugality = value
+		amplifiers.get_node("FrugAmpEdit").value = frugality
+	elif type == "liberality":
+		liberality = value
+		amplifiers.get_node("LibAmpEdit").value = liberality
+	initialize()
 
 func getAverageResults(pastResults):
 	var total = 0
@@ -615,17 +635,18 @@ func _on_LibAmpEdit_value_changed(value):
 	
 	
 func load_config():
-	var config = ConfigFile.new()
 	var err = config.load("settings.cfg")
 	if err == OK: # If not, something went wrong with the file loading
-	    # Look for the display/width pair, and default to 1024 if missing
-	    var screen_width = config.get_value("display", "width", 1024)
+	# Look for the display/width pair, and default to 1024 if missing
 	    # Store a variable if and only if it hasn't been defined yet
-	    if not config.has_section_key("audio", "mute"):
-	        config.set_value("audio", "mute", false)
-	    # Save the changes by overwriting the previous file
-	    config.save("settings.cfg")
-	print("Did config work? : ",config.get_value("test","some_key"))
+		if not config.has_section_key("batch", "types"):
+			config.set_value("batch", "types", ["diversity","volatility","frugality","liberality"])
+			config.set_value("batch", "diversity", [0,10,1])
+			config.set_value("batch", "volatility", [0,10,1])
+			config.set_value("batch", "frugality", [0,100,10])
+			config.set_value("batch", "liberality", [0,100,10])
+			# Save the changes by overwriting the previous file
+		config.save("settings.cfg")
 
 func save_results():
 	var save_game = File.new()

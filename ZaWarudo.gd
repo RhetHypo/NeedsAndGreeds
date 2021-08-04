@@ -6,13 +6,13 @@ enum G_TYPE {Standard, Poor, Rich, Special}
 enum N_TYPE {Frugal, Normal, Liberal}
 
 #export var population = 150
-export var turns = 25
+export var turns = 10
 export var volatility = 10
 export var deviation = 10
-export var poor = 5
-export var rich = 5
-export var spec = 5
-export var stan = 5
+export var poor = 10
+export var rich = 10
+export var spec = 10
+export var stan = 19
 export var slow = false
 export var realism = true#need is increased to be a percentage of greed, a.k.a. you need to spend money to make money
 export var batch = true
@@ -566,6 +566,10 @@ func _on_Button_pressed():
 	clear_results()
 
 func _on_RunHundred_pressed():
+	batch = true
+	variables.get_node("BatchEdit").pressed = batch
+	slow = false
+	variables.get_node("SlowEdit").pressed = slow
 	batch_stopped = false
 	var original = ""
 	if stopped:
@@ -607,6 +611,42 @@ func set_batch_variable(type, value):
 	elif type == "volatility":
 		volatility = value
 		variables.get_node("VolEdit").value = volatility
+	elif type == "standard":
+		stan = value
+		variables.get_node("StanEdit").value = stan
+	elif type == "poor":
+		poor = value
+		variables.get_node("PoorEdit").value = poor
+	elif type == "rich":
+		rich = value
+		variables.get_node("RichEdit").value = rich
+	elif type == "spec":
+		spec = value
+		variables.get_node("SpecEdit").value = spec
+	elif type == "diversity":
+		diversity = value
+		variables.get_node("DiveEdit").value = diversity
+	elif type == "crash":
+		crash = value
+		variables.get_node("CrashEdit").value = crash
+	elif type == "charity":
+		charity = value
+		variables.get_node("CharityEdit").value = charity
+	elif type == "greed_amp":
+		greed_amplifier = value
+		amplifiers.get_node("GreedAmpEdit").value = greed_amplifier
+	elif type == "need_amp":
+		need_amplifier = value
+		amplifiers.get_node("NeedAmpEdit").value = need_amplifier
+	elif type == "spec_amp":
+		spec_amplifier = value
+		amplifiers.get_node("SpecAmpEdit").value = spec_amplifier
+	elif type == "waste_amp":
+		waste_amplifier = value
+		amplifiers.get_node("WasteAmpEdit").value = waste_amplifier
+	elif type == "real_amp":
+		realism_amplifier = value
+		amplifiers.get_node("RealAmpEdit").value = realism_amplifier * 100
 	elif type == "frugality":
 		frugality = value
 		amplifiers.get_node("FrugAmpEdit").value = frugality
@@ -656,12 +696,12 @@ func save_results():
 
 func save_structure():
 	var curParams = ""#parametersOneLine()
-	var save_dict = "Standard, Pooled,,Starting Parameters"
+	var save_dict = "Standard,Pooled,Current Variable,Starting Parameters"
 	for i in range(0,standardPastResults.get_child_count()):#kind ramshackle, but it works
 		save_dict += "\n" + str(standardPastResults.get_child(i).get_node("Ratio").value)
 		save_dict += "," + str(pooledPastResults.get_child(i).get_node("Ratio").value)
 		if standardPastResults.get_child(i).hint_tooltip.replace("\n"," ") != curParams:
 			curParams = standardPastResults.get_child(i).hint_tooltip.replace("\n"," ")
-			save_dict += ",," + curParams
+			save_dict += "," + curParams
 	#save_dict += "\n" + "Test 3, Test 4"
 	return save_dict

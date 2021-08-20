@@ -8,6 +8,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 columns = 2
 script = ExtResource( 1 )
+stan = 20
 crash = 5
 
 [node name="TurnTimer" type="Timer" parent="."]
@@ -26,11 +27,12 @@ __meta__ = {
 margin_right = 642.0
 margin_bottom = 126.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/CenterContainer"]
-margin_left = 5.0
-margin_top = 53.0
-margin_right = 636.0
-margin_bottom = 73.0
+[node name="HBoxContainer" type="GridContainer" parent="MarginContainer/CenterContainer"]
+margin_left = 90.0
+margin_top = 41.0
+margin_right = 551.0
+margin_bottom = 85.0
+columns = 5
 
 [node name="Standard" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
 margin_right = 95.0
@@ -63,28 +65,32 @@ text = "Reset Stats"
 
 [node name="Pause" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
 pause_mode = 2
-margin_left = 465.0
-margin_right = 515.0
-margin_bottom = 20.0
+margin_top = 24.0
+margin_right = 95.0
+margin_bottom = 44.0
 text = "Pause"
 
 [node name="Stop" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
-margin_left = 519.0
-margin_right = 559.0
-margin_bottom = 20.0
+margin_left = 99.0
+margin_top = 24.0
+margin_right = 183.0
+margin_bottom = 44.0
 text = "Stop"
 
 [node name="RunHundred" type="Button" parent="MarginContainer/CenterContainer/HBoxContainer"]
-margin_left = 563.0
-margin_right = 627.0
-margin_bottom = 20.0
-text = "Run 100"
+margin_left = 187.0
+margin_top = 24.0
+margin_right = 271.0
+margin_bottom = 44.0
+text = "Run Batch"
 
 [node name="BatchLabel" type="Label" parent="MarginContainer/CenterContainer/HBoxContainer"]
-margin_left = 631.0
-margin_top = 3.0
-margin_right = 631.0
-margin_bottom = 17.0
+margin_left = 275.0
+margin_top = 27.0
+margin_right = 374.0
+margin_bottom = 41.0
+text = "Batch Status: "
+autowrap = true
 
 [node name="AmpifiersSection" type="VBoxContainer" parent="."]
 margin_left = 646.0

@@ -593,7 +593,7 @@ func _on_RunHundred_pressed():
 						yield(self,"sim_complete")
 					else:
 						break
-					get_node("MarginContainer/CenterContainer/HBoxContainer/BatchLabel").text = "Batch status: " + str(i+1)
+					get_node("MarginContainer/CenterContainer/HBoxContainer/BatchLabel").text = "Batch status: Run " + str(i+1)
 					initialize()
 #		diversity = 5
 #		variables.get_node("DiveEdit").value = diversity
